@@ -1,0 +1,24 @@
+{
+  "name": "lis",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node src/app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Cast324/Library-Information-System.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Cast324/Library-Information-System/issues"
+  },
+  "homepage": "https://github.com/Cast324/Library-Information-System#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "express-flash": "0.0.2",
+    "express-session": "^1.17.0"
+  }
+}
