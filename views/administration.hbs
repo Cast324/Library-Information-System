@@ -88,12 +88,14 @@
                   </tr>
               </thead>
               <tbody>
+                {{#patron}}
                   <tr>
-                      <th scope="row">00000000</th>
-                      <td>Mark</td>
-                      <td>Otto</td>
-                      <td>Address, Or Something, USA</td>
+                      <th scope="row">{{accountId}}</th>
+                      <td>{{firstName}}</td>
+                      <td>{{lastName}}</td>
+                      <td>{{#if address}}{{address}}{{else}}Nothing on file{{/if}}</td>
                   </tr>
+                {{/patron}}
               </tbody>
           </table>
 
