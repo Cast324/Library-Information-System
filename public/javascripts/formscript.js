@@ -1,0 +1,14 @@
+$('select[name="selectAccount"]').on('change',function(){
+    if($(this).val()=="patronAccount")
+    {
+     $("addressInput").show();
+     $("isAdminRadio").hide();
+     $("passwordInput").hide();
+    }
+    else
+    {
+     $("addressInput").hide();
+     $("isAdminRadio").show();
+     $("passwordInput").show();
+    }
+ });
