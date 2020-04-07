@@ -93,6 +93,7 @@
           <div class="modal-body">
             <div class="form-group">
               <!-- Account Type Form -->
+              <form id="account-form" method="POST" action="/administration">
               <label class="control-label" for="selectAccount">Account Type</label>
               <select id="selectAccount" name="selectAccount" class="form-control">
                 <option value="patronAccount">Patron</option>
@@ -127,9 +128,10 @@
           </div>
           <div class="modal-footer">
             <!-- Form Buttons -->
-            <button id="saveAccountButton" name="saveAccountButton" class="btn btn-success">Save</button>
+            <button id="saveAccountButton" name="saveAccountButton" value="submit" class="btn btn-success">Save</button>
             <button id="cancelChangesButton" name="cancelChangesButton" class="btn btn-danger" data-dismiss="modal">Cancel</button>
             </div>
+            </form>
           </div>
         </div>
       </div>
