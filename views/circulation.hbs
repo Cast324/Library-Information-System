@@ -70,7 +70,7 @@
       </div>
 
       <div class="col-lg-12 text-center" style="padding: 10px">
-          <h3>Patron Details</h3>
+          <h3>Active Patron Details</h3>
           <table class="table table-bordered">
               <thead>
                   <tr>
@@ -94,6 +94,7 @@
           <table class="table table-bordered">
               <thead>
                   <tr>
+                      <th scope="col">Select</th>
                       <th scope="col">#</th>
                       <th scope="col">Title</th>
                       <th scope="col">Barcode</th>
@@ -102,6 +103,13 @@
               </thead>
               <tbody>
                   <tr>
+                      <th scope="row">
+                        <!-- Material unchecked -->
+                        <div class="form-check">
+                        <input type="checkbox" class="form-check-input" id="materialTableCheckbox" value="selected">
+                        <label class="form-check-label" for="materialTableCheckbox">Select Material</label>
+                        </div>
+                      </th>
                       <th scope="row">1</th>
                       <td>Title</td>
                       <td>00000000</td>
