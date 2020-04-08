@@ -4,17 +4,33 @@ var databasemanager = require('../public/javascripts/databasemanager.js');
 var bodyParser = require('body-parser');
 var urlencodedParser = bodyParser.urlencoded({ extended: false});
 var accountId;
+const passport = require('passport');
+
 
 /* GET home page. */
-router.get('/', function(req, res, next) {
+router.get('/', checkNotAuthenticated, function(req, res, next) {
   res.render('index');
 });
 
-router.get('/landing', function(req, res, next) {
+router.post('/', checkNotAuthenticated, passport.authenticate('local', {
+  successRedirect: '/landing',
+  failureRedirect: '/',
+  failureFlash: false
+}))
+
+
+function checkNotAuthenticated(req, res, next) {
+  if (req.isAuthenticated()) {
+    return res.redirect('/landing')
+  }
+
+  next()
+}
+router.get('/landing',checkAuthenticated, function(req, res, next) {
   res.render('landing');
 });
 
-router.get('/administration', function(req, res, next) {
+router.get('/administration',checkAuthenticated, function(req, res, next) {
   databasemanager.query("SELECT * FROM Patron", (err, rows, fields) => {
     if (err) throw err;
     const patrons = {
@@ -24,7 +40,7 @@ router.get('/administration', function(req, res, next) {
   })
 });
 
-router.post('/administration/delete', urlencodedParser, function(req, res) {
+router.post('/administration/delete', checkAuthenticated, urlencodedParser, function(req, res) {
   if (!req.body) return res.sendStatus(400);
   console.log(req.body);
   var sql = 'delete from Account where accountId = '+req.body.removeAccountSNumber+';';
@@ -35,7 +51,7 @@ router.post('/administration/delete', urlencodedParser, function(req, res) {
   res.redirect('/administration');
 });
 
-router.post('/administration', urlencodedParser, function(req, res) {
+router.post('/administration', checkAuthenticated,  urlencodedParser, function(req, res) {
   if (!req.body) return res.sendStatus(400);
   console.log(req.body);
   let current_datetime = new Date();
@@ -69,16 +85,30 @@ function dbQuery(sql, callback) {
     return callback(result.insertId)
   })
 }
-router.get('/circulation', function(req, res, next) {
+router.get('/circulation',checkAuthenticated, function(req, res, next) {
   res.render('circulation');
 });
 
-router.get('/reference', function(req, res, next) {
+router.get('/reference',checkAuthenticated, function(req, res, next) {
   res.render('reference');
 });
 
-router.get('/itportal', function(req, res, next) {
+router.get('/itportal',checkAuthenticated, function(req, res, next) {
   res.render('itportal');
 });
+
+function checkAuthenticated(req, res, next) {
+
+  if (req.isAuthenticated()) {
+    return next()
+  }
+
+  res.redirect('/')
+}
+
+router.delete('/logout', (req, res) => {
+  req.logout()
+  res.redirect('/')
+})
 
 module.exports = router;

@@ -1,14 +1,12 @@
-$('select[name="selectAccount"]').on('change',function(){
-    if($(this).val()=="patronAccount")
-    {
-     $("addressInput").show();
-     $("isAdminRadio").hide();
-     $("passwordInput").hide();
-    }
-    else
-    {
-     $("addressInput").hide();
-     $("isAdminRadio").show();
-     $("passwordInput").show();
-    }
- });
+$( document ).ready(function() {
+    $(".accountTypeSelect").change(function() {
+        if ($(this).val() == "patronAccount") {
+          $("#patronControls").removeClass('d-none');
+          $("#materialControls").addClass('d-none');
+        } else {
+          $("#patronControls").addClass('d-none');
+          $("#materialControls").removeClass('d-none');
+        }
+      });
+    console.log( "ready!" );
+});
