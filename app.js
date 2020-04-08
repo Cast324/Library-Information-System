@@ -3,9 +3,24 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+const passport = require('passport')
+const fs = require("fs")
+const flash = require('express-flash')
+const session = require('express-session')
+const dbPath = path.join(__dirname, './bin/admin.json')
+const methodOverride = require('method-override')
+
+
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
+
+const initializePassport = require('./bin/services/passportconfig.js')
+initializePassport(
+  passport,
+  email => findEmail(email),
+  id => findByID(id)
+)
 
 var app = express();
 
@@ -18,24 +33,65 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(flash())
+app.use(session({
+  secret: process.env.SESSION_SECRET || 'Test',
+  resave: false,
+  saveUninitialized: false
+}))
+app.use(passport.initialize())
+app.use(passport.session())
+app.use(methodOverride('_method'))
+
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
-  next(createError(404));
-});
+// app.use(function(req, res, next) {
+//   next(createError(404));
+// });
 
-// error handler
-app.use(function(err, req, res, next) {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
+// // error handler
+// app.use(function(err, req, res, next) {
+//   // set locals, only providing error in development
+//   res.locals.message = err.message;
+//   res.locals.error = req.app.get('env') === 'development' ? err : {};
 
-  // render the error page
-  res.status(err.status || 500);
-  res.render('error');
-});
+//   // render the error page
+//   res.status(err.status || 500);
+//   res.render('error');
+// });
 
-module.exports = app;
+const loadUsers = () => {
+  try {
+    const dataBuffer = fs.readFileSync(dbPath)
+    const dataJSON = dataBuffer.toString()
+    return JSON.parse(dataJSON)
+  } catch(e) {
+    console.log(e)
+    return[]
+  }
+}
+
+const findEmail = (email) => {
+  const users = loadUsers()
+  const user = users.find( (user) => email === user.email)
+
+  console.log('testemail')
+  return user
+
+}
+
+const findByID = (id) => {
+  const users = loadUsers()
+  const user = users.find( (user) => id === user.id)
+
+  console.log('test')
+
+
+  return user
+
+}
+
+module.exports = app, passport;
