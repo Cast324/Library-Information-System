@@ -11,7 +11,7 @@ const passport = require('passport');
 router.get('/', checkNotAuthenticated, function(req, res, next) {
   res.render('index');
 });
-
+//This is my change
 router.post('/', checkNotAuthenticated, passport.authenticate('local', {
   successRedirect: '/landing',
   failureRedirect: '/',
