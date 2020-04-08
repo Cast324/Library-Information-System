@@ -149,6 +149,7 @@
             </div>
           <div class="modal-body">
             <div class="form-group">
+               <form id="delete-account-form" method="POST" action="/administration/delete">
               <!-- Remove Account by Number Form -->
               <label class="control-label" for="removeAccountSNumber">Remove By Account Number</label>  
               <input id="removeAccountSNumber" name="removeAccountSNumber" type="text" placeholder="" class="form-control input-md">
@@ -156,9 +157,10 @@
           </div>
           <div class="modal-footer">
             <!-- Form Buttons -->
-            <button id="saveAccountButton" name="removeAccountButton" class="btn btn-danger">Remove</button>
+            <button id="saveAccountButton" name="removeAccountButton" class="btn btn-danger " value="submit">Remove</button>
             <button id="cancelChangesButton" name="cancelRemovalButton" class="btn btn-primary" data-dismiss="modal">Cancel</button>
             </div>
+            </form>
           </div>
         </div>
       </div>
@@ -192,7 +194,7 @@
 
       <!-- Table Area -->
       <div class="col-lg-12 text-center" style="padding: 10px">
-          <h3>Table Area</h3>
+          <h3>Patron Accounts</h3>
           <table class="table table-bordered table-hover">
               <thead>
                   <tr>

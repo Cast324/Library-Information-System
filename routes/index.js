@@ -24,6 +24,17 @@ router.get('/administration', function(req, res, next) {
   })
 });
 
+router.post('/administration/delete', urlencodedParser, function(req, res) {
+  if (!req.body) return res.sendStatus(400);
+  console.log(req.body);
+  var sql = 'delete from Account where accountId = '+req.body.removeAccountSNumber+';';
+  databasemanager.query(sql, function(err, result) {
+    if (err) throw err;
+    console.log("Account deleted, ID: " + result.insertId);
+  })
+  res.redirect('/administration');
+});
+
 router.post('/administration', urlencodedParser, function(req, res) {
   if (!req.body) return res.sendStatus(400);
   console.log(req.body);
