@@ -10,6 +10,9 @@ const flash = require('express-flash')
 const session = require('express-session')
 const dbPath = path.join(__dirname, './bin/admin.json')
 const methodOverride = require('method-override')
+// const db = require('./public/javascripts/databasemanager');
+const db = require('./config/database');
+
 
 
 
@@ -47,6 +50,14 @@ app.use(methodOverride('_method'))
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+
+//Database Conection
+try {
+  db.authenticate();
+  console.log('Connection has been established successfully.');
+} catch (error) {
+  console.error('Unable to connect to the database:', error);
+}
 
 // catch 404 and forward to error handler
 // app.use(function(req, res, next) {

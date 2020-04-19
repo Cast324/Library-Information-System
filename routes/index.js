@@ -1,10 +1,12 @@
 var express = require('express');
 var router = express.Router();
-var databasemanager = require('../public/javascripts/databasemanager.js');
+// var databasemanager = require('../public/javascripts/databasemanager.js');
+var databasemanager = require('../config/database.js');
 var bodyParser = require('body-parser');
 var urlencodedParser = bodyParser.urlencoded({ extended: false});
 var accountId;
 const passport = require('passport');
+const Account = require('../models/Account');
 
 
 /* GET home page. */
@@ -31,13 +33,19 @@ router.get('/landing',checkAuthenticated, function(req, res, next) {
 });
 
 router.get('/administration',checkAuthenticated, function(req, res, next) {
-  databasemanager.query("SELECT * FROM Patron", (err, rows, fields) => {
-    if (err) throw err;
-    const patrons = {
-      patron: rows
-    }
-    res.render('administration', patrons)
-  })
+  // databasemanager.query("SELECT * FROM Account", (err, rows, fields) => {
+  //   if (err) throw err;
+  //   const patrons = {
+  //     patron: rows
+  //   }
+  //       .catch(err => console.log(err))
+  //   res.render('administration')
+  // })
+  Account.findAll()
+        .then(account => {
+            res.render('administration', { account })
+        })
+        .catch(err => console.log(err));
 });
 
 router.post('/administration/delete', checkAuthenticated, urlencodedParser, function(req, res) {
