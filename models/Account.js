@@ -34,7 +34,7 @@ const Account = sequelize.define('Account', {
       type: DataTypes.STRING(100),
       allowNull: false
     },
-    isAdminl: {
+    isAdmin: {
       type: DataTypes.INTEGER(1),
       allowNull: true,
       defaultValue: '0'
