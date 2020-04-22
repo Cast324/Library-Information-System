@@ -60,30 +60,50 @@ router.post('/administration/delete', checkAuthenticated, urlencodedParser, func
 });
 
 router.post('/administration', checkAuthenticated,  urlencodedParser, function(req, res) {
-  if (!req.body) return res.sendStatus(400);
-  console.log(req.body);
-  let current_datetime = new Date();
-  let dbDate = current_datetime.getFullYear() + "-" + (current_datetime.getMonth() + 1) + "-" + current_datetime.getDate();
-  var sql = 'insert into Account (creationDate, state, password) values (\''+dbDate+'\',\'active\',\''+req.body.passwordInput+'\');';
-  var tempId;
-  dbQuery(sql, function(result) {
-    tempId = result;
-    if (req.body.selectAccount === 'patronAccount') {
-      let patronSql = 'insert into Patron (accountID, firstName, lastName, address, email) values ('+tempId+',\''+req.body.firstNameInput+'\',\''+req.body.lastNameInput+'\',\''+req.body.addressInput+'\',\''+req.body.emailInput+'\');';
-      databasemanager.query(patronSql, function(err, result) {
-        if (err) throw err;
-        console.log("Patron account made, ID:" + result.insertId);
-      })
-    } else if (req.body.selectAccount === 'staffAccount') {
-      let patronSql = 'insert into Staff (accountID, firstName, lastName, email, isAdmin) values ('+tempId+',\''+req.body.firstNameInput+'\',\''+req.body.lastNameInput+'\',\''+req.body.emailInput+'\','+req.body.isAdminRadio+');';
-      databasemanager.query(patronSql, function(err, result) {
-        if (err) throw err;
-        console.log("Patron account made, ID:" + result.insertId);
-      })
-    }  
-  });
-  console.log(req.body);
-  res.redirect('/administration');
+
+  const data = {
+    firstName: req.body.firstNameInput,
+    lastName: req.body.lastNameInput,
+    email: req.body.emailInput,
+    address: req.body.addressInput,
+    isAdmin: req.body.isAdminRadio,
+    password: req.body.passwordInput
+  }
+
+    Account.create({
+      firstName: data.firstName,
+      lastName: data.lastName,
+      email: data.email,
+      address: data.address,
+      isAdmin: data.isAdmin,
+      password: data.password
+    })
+      .then(account => res.redirect('/administration'))
+      .catch(err => console.log(err));
+  // if (!req.body) return res.sendStatus(400);
+  // console.log(req.body);
+  // let current_datetime = new Date();
+  // let dbDate = current_datetime.getFullYear() + "-" + (current_datetime.getMonth() + 1) + "-" + current_datetime.getDate();
+  // var sql = 'insert into Account (creationDate, state, password) values (\''+dbDate+'\',\'active\',\''+req.body.passwordInput+'\');';
+  // var tempId;
+  // dbQuery(sql, function(result) {
+  //   tempId = result;
+  //   if (req.body.selectAccount === 'patronAccount') {
+  //     let patronSql = 'insert into Patron (accountID, firstName, lastName, address, email) values ('+tempId+',\''+req.body.firstNameInput+'\',\''+req.body.lastNameInput+'\',\''+req.body.addressInput+'\',\''+req.body.emailInput+'\');';
+  //     databasemanager.query(patronSql, function(err, result) {
+  //       if (err) throw err;
+  //       console.log("Patron account made, ID:" + result.insertId);
+  //     })
+  //   } else if (req.body.selectAccount === 'staffAccount') {
+  //     let patronSql = 'insert into Staff (accountID, firstName, lastName, email, isAdmin) values ('+tempId+',\''+req.body.firstNameInput+'\',\''+req.body.lastNameInput+'\',\''+req.body.emailInput+'\','+req.body.isAdminRadio+');';
+  //     databasemanager.query(patronSql, function(err, result) {
+  //       if (err) throw err;
+  //       console.log("Patron account made, ID:" + result.insertId);
+  //     })
+  //   }  
+  // });
+  // console.log(req.body);
+  // res.redirect('/administration');
 });
 
 function dbQuery(sql, callback) {
