@@ -1,7 +1,7 @@
-/* jshint indent: 2 */
+const { Sequelize, DataTypes } = require('sequelize');
+const sequelize = require('../config/database');
 
-module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('Book_Lending', {
+const Book_Lending = sequelize.define('Book_Lending', {
     accountId: {
       type: DataTypes.INTEGER(11),
       allowNull: false,
@@ -35,4 +35,5 @@ module.exports = function(sequelize, DataTypes) {
   }, {
     tableName: 'Book_Lending'
   });
-};
+
+module.exports = Book_Lending;

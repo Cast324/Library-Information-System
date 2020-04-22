@@ -7,6 +7,7 @@ var urlencodedParser = bodyParser.urlencoded({ extended: false});
 var accountId;
 const passport = require('passport');
 const Account = require('../models/Account');
+const Books = require('../models/Book_Item');
 
 
 /* GET home page. */
@@ -33,15 +34,15 @@ router.get('/landing',checkAuthenticated, function(req, res, next) {
 });
 
 router.get('/administration',checkAuthenticated, function(req, res, next) {
-  // databasemanager.query("SELECT * FROM Account", (err, rows, fields) => {
-  //   if (err) throw err;
-  //   const patrons = {
-  //     patron: rows
-  //   }
-  //       .catch(err => console.log(err))
-  //   res.render('administration')
-  // })
   Account.findAll()
+        .then(account => {
+            res.render('administration', { account })
+        })
+        .catch(err => console.log(err));
+});
+
+router.get('/materials',checkAuthenticated, function(req, res, next) {
+  Books.findAll()
         .then(account => {
             res.render('administration', { account })
         })

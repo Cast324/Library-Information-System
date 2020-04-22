@@ -1,7 +1,7 @@
-/* jshint indent: 2 */
+const { Sequelize, DataTypes } = require('sequelize');
+const sequelize = require('../config/database');
 
-module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('Collection', {
+const Collection = sequelize.define('Collection', {
     collectionId: {
       type: DataTypes.INTEGER(11),
       allowNull: false,
@@ -19,4 +19,6 @@ module.exports = function(sequelize, DataTypes) {
   }, {
     tableName: 'Collection'
   });
-};
+
+
+  module.exports = Collection;
