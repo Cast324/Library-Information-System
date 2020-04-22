@@ -1,7 +1,7 @@
-/* jshint indent: 2 */
+const { Sequelize, DataTypes } = require('sequelize');
+const sequelize = require('../config/database');
 
-module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('Lion_Card', {
+const Lion_Card = sequelize.define('Lion_Card', {
     sNumber: {
       type: DataTypes.STRING(15),
       allowNull: false,
@@ -10,4 +10,5 @@ module.exports = function(sequelize, DataTypes) {
   }, {
     tableName: 'Lion_Card'
   });
-};
+
+  module.exports = Lion_Card;

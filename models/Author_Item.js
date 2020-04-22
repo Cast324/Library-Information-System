@@ -1,7 +1,7 @@
-/* jshint indent: 2 */
+const { Sequelize, DataTypes } = require('sequelize');
+const sequelize = require('../config/database');
 
-module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('Author_Item', {
+const Author_Item = sequelize.define('Author_Item', {
     authorId: {
       type: DataTypes.INTEGER(11),
       allowNull: false,
@@ -20,7 +20,8 @@ module.exports = function(sequelize, DataTypes) {
         key: 'barcode'
       }
     }
-  }, {
+  },{
     tableName: 'Author_Item'
-  });
-};
+});
+
+module.exports = Author_Item;

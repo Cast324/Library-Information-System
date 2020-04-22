@@ -1,7 +1,7 @@
-/* jshint indent: 2 */
+const { Sequelize, DataTypes } = require('sequelize');
+const sequelize = require('../config/database');
 
-module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('Item', {
+const Item = sequelize.define('Item', {
     barcode: {
       type: DataTypes.CHAR(15),
       allowNull: false,
@@ -42,4 +42,5 @@ module.exports = function(sequelize, DataTypes) {
   }, {
     tableName: 'Item'
   });
-};
+
+module.exports = Item;

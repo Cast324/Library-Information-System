@@ -1,7 +1,7 @@
-/* jshint indent: 2 */
+const { Sequelize, DataTypes } = require('sequelize');
+const sequelize = require('../config/database');
 
-module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('Notification', {
+const Notification = sequelize.define('Notification', {
     notificationId: {
       type: DataTypes.INTEGER(11),
       allowNull: false,
@@ -27,4 +27,5 @@ module.exports = function(sequelize, DataTypes) {
   }, {
     tableName: 'Notification'
   });
-};
+
+module.exports = Notification;

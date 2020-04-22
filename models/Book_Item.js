@@ -1,7 +1,7 @@
-/* jshint indent: 2 */
+const { Sequelize, DataTypes } = require('sequelize');
+const sequelize = require('../config/database');
 
-module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('Book_Item', {
+const Book_Item = sequelize.define('Book_Item', {
     barcode: {
       type: DataTypes.CHAR(15),
       allowNull: false,
@@ -31,15 +31,12 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.INTEGER(6),
       allowNull: true
     },
-    locationId: {
-      type: DataTypes.INTEGER(11),
-      allowNull: false,
-      references: {
-        model: 'Location',
-        key: 'locationId'
-      }
+    location: {
+      type: DataTypes.STRING(100),
+      allowNull: false
     }
   }, {
     tableName: 'Book_Item'
   });
-};
+
+module.exports = Book_Item;
