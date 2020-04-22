@@ -47,49 +47,96 @@
           <li class="nav-item">
             <a class="nav-link external-link" href="https://www.mssu.edu/business-affairs/information-technology/">IT PORTAL</a>
           </li>
-          <li><form action="/logout?_method=DELETE" method="POST">
-    <button type="submit">Logout </button>
-  </form></li>
+          <li>
+            <form action="/logout?_method=DELETE" method="POST">
+            <button class="btn btn-primary" type="submit">Logout </button>
+            </form>
+          </li>
         </ul>
       </div>
     </div>
   </nav>
 
   <!-- Page Content -->
- <div class="container">
+<div class="container">
 
-     <div class="col-lg-12 text-center" style="padding: 30px">
-         <h3>Administration</h3>
-         <p>View, Edit, Add, and Remove Items, Collections, and Patron Accounts.</p>
-         <!-- Search form -->
-         <div class="input-group mb-3">
+  <div class="col-lg-12 text-center" style="padding: 30px">
+    <h3>Administration</h3>
+    <p>View, Edit, Add, and Remove Items, Collections, and Patron Accounts.</p>
 
-             <select class="form-control target accountTypeSelect" id="accountTypeSelect">
-                 <option value="patronAccount">Patron Account</option>
-                 <option value="materialItem">Material/Item</option>
-             </select>
+      <a class="btn btn-primary" data-toggle="collapse" href="#collapseAccounts" role="button" aria-expanded="false"
+      aria-controls="collapseAccounts">ACCOUNTS</a>
 
-             <!-- Search box -->
-             <div class="input-group col-sm-8">
-                 <input type="text" class="form-control" placeholder="" aria-label="" aria-describedby="basic-addon1">
-             </div>
-             <button id="searchButton" name="searchButton" class="btn btn-primary">Search</button>
-         </div>
-     </div>
+      <a class="btn btn-primary" data-toggle="collapse" href="#collapseMaterials" role="button" aria-expanded="false"
+      aria-controls="collapseMaterials">MATERIALS</a>
 
-      <div class="row" id="patronControls" style="padding: 10px">
-          <div class="col"><button type="button" class="btn btn-primary btn-lg btn-block" data-toggle="modal" data-target="#createAccountModal">Add</button></div>
-          <div class="col"><button type="button" class="btn btn-primary btn-lg btn-block" data-toggle="modal" data-target="#removeAccountModal">Remove</button></div>
-          <div class="col"><button type="button" class="btn btn-primary btn-lg btn-block" >View Details</button></div>
-          <div class="col"><button type="button" class="btn btn-primary btn-lg btn-block" data-toggle="modal" data-target="#editAccountModal">Edit</button></div>
-      </div>
+  </div>
 
-      <div class="row d-none" id="materialControls" style="padding: 10px">
-          <div class="col"><button type="button" class="btn btn-primary btn-lg btn-block" data-toggle="modal" data-target="#createAccountModal">Add Material</button></div>
-          <div class="col"><button type="button" class="btn btn-primary btn-lg btn-block" data-toggle="modal" data-target="#removeAccountModal">Remove</button></div>
-          <div class="col"><button type="button" class="btn btn-primary btn-lg btn-block" >View Details</button></div>
-          <div class="col"><button type="button" class="btn btn-primary btn-lg btn-block" data-toggle="modal" data-target="#editAccountModal">Edit</button></div>
-      </div>
+  <div class="row collapse" id="collapseAccounts" style="padding: 10px">
+    <div class="col"><button type="button" class="btn btn-primary btn-lg btn-block" data-toggle="modal"
+        data-target="#createAccountModal">Add New Account</button></div>
+    <!-- Table Area -->
+    <div class="col-lg-12 text-center" style="padding: 10px">
+      <h3 id="patronAccountsHeading">Accounts</h3>
+      <table class="table table-bordered table-hover">
+        <thead>
+          <tr>
+            <th scope="col">S#</th>
+            <th scope="col">First</th>
+            <th scope="col">Last</th>
+            <th scope="col">Address</th>
+          </tr>
+        </thead>
+        <tbody>
+          {{#account}}
+          <tr>
+            <th scope="row">{{accountId}}</th>
+            <td>{{firstName}}</td>
+            <td>{{lastName}}</td>
+            <td>{{#if address}}{{address}}{{else}}Nothing on file{{/if}}</td>
+            <td><a href="#">edit</a>
+              <a href="#">delete</a>
+            </td>
+          </tr>
+          {{/account}}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div class="row collapse" id="collapseMaterials" style="padding: 10px">
+    <div class="col"><button type="button" class="btn btn-primary btn-lg btn-block" data-toggle="modal"
+        data-target="#createMaterialModal">Add New Materials</button></div>
+    <!-- Table Area -->
+    <div class="col-lg-12 text-center" style="padding: 10px">
+      <h3 id="patronAccountsHeading">Materials</h3>
+      <table class="table table-bordered table-hover">
+        <thead>
+          <tr>
+            <th scope="col">S#</th>
+            <th scope="col">First</th>
+            <th scope="col">Last</th>
+            <th scope="col">Address</th>
+          </tr>
+        </thead>
+        <tbody>
+          {{#account}}
+          <tr>
+            <th scope="row">{{accountId}}</th>
+            <td>{{firstName}}</td>
+            <td>{{lastName}}</td>
+            <td>{{#if address}}{{address}}{{else}}Nothing on file{{/if}}</td>
+            <td><a href="#">edit</a>
+              <a href="#">delete</a>
+            </td>
+          </tr>
+          {{/account}}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
 
       <!-- Add Modal -->
       <div class="modal fade" id="createAccountModal" tabindex="-1" role="dialog" aria-labelledby="createAccountModal" aria-hidden="true">
@@ -201,39 +248,6 @@
           </div>
         </div>
       </div>
-
-      <!-- Table Area -->
-      <div class="col-lg-12 text-center" style="padding: 10px">
-
-          <h3 id="patronAccountsHeading">Patron Accounts</h3>
-          <h3 class="d-none" id="materialsHeading">Materials/Items</h3>
-          
-          <table class="table table-bordered table-hover">
-              <thead>
-                  <tr>
-                      <th scope="col">S#</th>
-                      <th scope="col">First</th>
-                      <th scope="col">Last</th>
-                      <th scope="col">Address</th>
-                  </tr>
-              </thead>
-              <tbody>
-                {{#account}}
-                  <tr>
-                      <th scope="row">{{accountId}}</th>
-                      <td>{{firstName}}</td>
-                      <td>{{lastName}}</td>
-                      <td>{{#if address}}{{address}}{{else}}Nothing on file{{/if}}</td>
-                      <td><a href="#">edit</a>
-                          <a href="#">delete</a>
-                      </td>
-                  </tr>
-                {{/account}}
-              </tbody>
-          </table>
-
-      </div>
-
   </div>
 
   <!-- Bootstrap core JavaScript -->
