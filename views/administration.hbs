@@ -98,7 +98,7 @@
             <td>{{lastName}}</td>
             <td>{{#if address}}{{address}}{{else}}Nothing on file{{/if}}</td>
             <td>{{email}}</td>
-            <td><a href="#">edit</a>
+            <td><a href="/administration/{{accountId}}">edit</a>
               <a href="#">delete</a>
             </td>
           </tr>
@@ -125,17 +125,17 @@
           </tr>
         </thead>
         <tbody>
-          {{#account}}
+          {{#book}}
           <tr>
-            <th scope="row">{{accountId}}</th>
-            <td>{{firstName}}</td>
-            <td>{{lastName}}</td>
-            <td>{{#if address}}{{address}}{{else}}Nothing on file{{/if}}</td>
+            <th scope="row">{{barcode}}</th>
+            <td>{{book.title}}</td>
+            <td>{{numberOfPages}}</td>
+            <td>{{location}}</td>
             <td><a href="#">edit</a>
               <a href="#">delete</a>
             </td>
           </tr>
-          {{/account}}
+          {{/book}}
         </tbody>
       </table>
     </div>
