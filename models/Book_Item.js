@@ -15,10 +15,6 @@ const Book_Item = sequelize.define('Book_Item', {
       type: DataTypes.INTEGER(6),
       allowNull: false
     },
-    format: {
-      type: DataTypes.STRING(50),
-      allowNull: false
-    },
     isBorrowed: {
       type: DataTypes.INTEGER(1),
       allowNull: true

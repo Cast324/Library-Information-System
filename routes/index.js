@@ -41,6 +41,11 @@ router.get('/administration',checkAuthenticated, function(req, res, next) {
         .catch(err => console.log(err));
 });
 
+router.get('/administration/:id',checkAuthenticated, function(req, res, render) {
+  console.log(request.params.id);
+  res.sendStatus(200);
+});
+
 router.get('/materials',checkAuthenticated, function(req, res, next) {
   Books.findAll()
         .then(account => {
