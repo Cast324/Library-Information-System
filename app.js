@@ -16,9 +16,6 @@ const Account = require('./models/Account.js');
 
 
 
-
-
-
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 

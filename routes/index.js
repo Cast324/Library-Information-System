@@ -41,9 +41,47 @@ router.get('/administration',checkAuthenticated, function(req, res, next) {
         .catch(err => console.log(err));
 });
 
-router.get('/administration/:id',checkAuthenticated, function(req, res, render) {
-  console.log(request.params.id);
-  res.sendStatus(200);
+router.get('/account/:id',checkAuthenticated, function(req, res, render) {
+  const accountId = req.params.id;
+  Account.findAll({
+    where: {
+      accountId: accountId
+    }
+  })
+  .then(account => {
+      res.send( account )
+  })
+  .catch(err => console.log(err));
+});
+
+router.put('/account/:id', checkAuthenticated, function(req, res) {
+  const accountId = req.params.id;
+  const data = {
+    firstName: req.body.firstNameUpdate,
+    lastName: req.body.lastNameUpdate,
+    email: req.body.emailUpdate,
+    address: req.body.addressUpdate,
+    isAdmin: req.body.isAdminRadio,
+    password: req.body.passwordUpdate
+  }
+  Account.update({
+    firstName: data.firstName,
+    lastName: data.lastName,
+    email: data.email,
+    address: data.address,
+    isAdmin: data.isAdmin,
+    password: data.password
+  },{
+    where: {
+      accountId: accountId
+    }
+  })
+  .then(() => {
+    console.log('Update successful');
+    res.redirect('/administration');
+  })
+  .catch(err => console.log(err));
+
 });
 
 router.get('/materials',checkAuthenticated, function(req, res, next) {

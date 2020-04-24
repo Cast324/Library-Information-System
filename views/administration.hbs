@@ -69,6 +69,9 @@
 
     <a class="btn btn-primary" data-toggle="collapse" href="#collapseMaterials" role="button" aria-expanded="false"
       aria-controls="collapseMaterials">MATERIALS</a>
+    
+    <button id="testButton" class="btn btn-primary">Test</button>
+
 
   </div>
 
@@ -98,7 +101,7 @@
             <td>{{lastName}}</td>
             <td>{{#if address}}{{address}}{{else}}Nothing on file{{/if}}</td>
             <td>{{email}}</td>
-            <td><a href="/administration/{{accountId}}">edit</a>
+            <td><button type="button" class="btn btn-primary accountInfo" data-account="{{accountId}}">Edit</button>
               <a href="#">delete</a>
             </td>
           </tr>
@@ -144,6 +147,58 @@
 </div>
 
 </div>
+
+<!-- Account Modal -->
+      <div class="modal fade" id="accountModal" tabindex="-1" role="dialog" aria-labelledby="accountModal" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+            <h5 class="modal-title" id="modalLabel">Edit account </h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+            </div>
+          <div class="modal-body">
+            <div class="form-group">
+              <!-- Account Type Form -->
+              <form id="account-update" method="POST" action="/account/">
+              <!-- First Name Form -->
+              <label class="control-label" for="firstNameUpdate">First Name</label>
+              <input id="firstNameUpdate" name="firstNameUpdate" type="text" placeholder="First Name" class="form-control input-md" required="">
+              <!-- Last Name Form -->
+              <label class="control-label" for="lastNameUpdate">Last Name</label>
+              <input id="lastNameUpdate" name="lastNameUpdate" type="text" placeholder="Last Name" class="form-control input-md" required="">
+              <!-- Email Form -->
+              <label class="control-label" for="emailUpdate">Email</label>
+              <input id="emailUpdate" name="emailUpdate" type="text" placeholder="Email@domain.com" class="form-control input-md" required="">
+              <!-- Address Form -->
+              <div class="addressInput"> 
+              <label class="control-label" for="addressUpdate">Address (Patrons Only)</label>
+              <input id="addressUpdate" name="addressUpdate" type="text" placeholder="123 Street Address, City, State, Zip" class="form-control input-md">
+              </div>
+              <!-- Admin Status Radios -->
+              <label class="control-label" for="isAdminRadioUpdate">Is user an Admin? (Staff Only)</label>
+              <div class="radioUpdate">
+                <label for="isAdminRadio-0">
+                <input type="radio" name="isAdminRadio" id="isAdminRadio-0" value="0" >No</label>
+                <label for="isAdminRadio-1">
+                <input type="radio" name="isAdminRadio" id="isAdminRadio-1" value="1" >Yes</label>
+              </div>
+              <!-- Password Form -->
+              <label class="control-label" for="passwordUpdate">Password</label>
+              <input id="passwordUpdate" name="passwordUpdate" type="password" placeholder="Password" class="form-control input-md" required="">
+            </div>
+          </div>
+          <div class="modal-footer">
+            <!-- Form Buttons -->
+            <button id="saveAccountButton" name="saveAccountButton" value="submit" class="btn btn-success">Save</button>
+            <button id="cancelChangesButton" name="cancelChangesButton" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+            </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      <!-- End Add Modal -->
 
       <!-- Add Modal -->
       <div class="modal fade" id="createAccountModal" tabindex="-1" role="dialog" aria-labelledby="createAccountModal" aria-hidden="true">
@@ -258,11 +313,41 @@
   </div>
 
   <!-- Bootstrap core JavaScript -->
-  <script src="vendor/jquery/jquery.slim.min.js"></script>
+  <script src="vendor/jquery/jquery.min.js"></script>
   <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
   <script src="public/javascripts/formscript.js"></script>
-  
-    <script>
+  <script type="text/javascript">
+  $(document).ready(() => {
+    $('.accountInfo').click((event) => {
+        $.ajax ({
+        url: 'account/'+event.target.dataset.account+'/',
+        type: 'GET',
+        dataType: 'json',
+        success: (data) => {
+          $('.modal-body #firstNameUpdate').val(data[0].firstName);
+          $('.modal-body #lastNameUpdate').val(data[0].lastName);
+          $('.modal-body #emailUpdate').val(data[0].email);
+          $('.modal-body #addressUpdate').val(data[0].address);
+          $('.modal-body #passwordUpdate').val(data[0].password);
+          if (data[0].isAdmin == 1) {
+            $('.modal-body #isAdminRadio-1').prop('checked', true);
+          }
+          else {
+            $('.modal-body #isAdminRadio-0').prop('checked', true);
+          }
+          $('#account-update').attr('action', 'account/'+event.target.dataset.account+'/?_method=PUT');
+          $('#accountModal').modal('show');
+          console.log('ajax success', data);
+          console.log(data[0].firstName);
+        }
+
+      });
+
+  });
+  });
+</script>
+
+{{!-- <script>
     $( document ).ready(function() {
       $(".accountTypeSelect").change(function() {
         if ($(this).val() == "patronAccount") {
@@ -278,7 +363,7 @@
       });
     console.log( "ready!" );
 });
-  </script>
+  </script> --}}
 
 </body>
 
