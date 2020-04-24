@@ -12,6 +12,9 @@ const dbPath = path.join(__dirname, './bin/admin.json')
 const methodOverride = require('method-override')
 // const db = require('./public/javascripts/databasemanager');
 const db = require('./config/database');
+const Account = require('./models/Account.js');
+
+
 
 
 
@@ -86,23 +89,43 @@ const loadUsers = () => {
   }
 }
 
-const findEmail = (email) => {
-  const users = loadUsers()
-  const user = users.find( (user) => email === user.email)
+async function findUserbyEmail(email) {
+  const data = await Account.findAll({
+    where: {
+      email: email
+    }
+  })
+        .then(account => {
+            return account
+        })
+        .catch(err => console.log(err));
 
-  console.log('testemail')
-  return user
+        return data
+}
+
+async function findUserbyID(id) {
+  const data = await Account.findAll({
+    where: {
+      accountId: id
+    }
+  })
+        .then(account => {
+            return account
+        })
+        .catch(err => console.log(err));
+
+        return data
+}
+
+const findEmail = async (email) => {
+
+  return await findUserbyEmail(email)
+  
 
 }
 
-const findByID = (id) => {
-  const users = loadUsers()
-  const user = users.find( (user) => id === user.id)
-
-  console.log('test')
-
-
-  return user
+const findByID = async (id) => {
+  return await findUserbyID(id)
 
 }
 
