@@ -8,6 +8,7 @@ var accountId;
 const passport = require('passport');
 const Account = require('../models/Account');
 const Books = require('../models/Book_Item');
+const Item = require('../models/Item');
 
 
 /* GET home page. */
@@ -34,15 +35,29 @@ router.get('/landing',checkAuthenticated, function(req, res, next) {
 });
 
 router.get('/administration',checkAuthenticated, function(req, res, next) {
-  Account.findAll()
-        .then(account => {
-            res.render('administration', { account })
-        })
-        .catch(err => console.log(err));
+    const accounts = Account.findAll();
+    const item = Item.findAll({
+      include: [{
+        model: Books,
+        as: 'Book_Items',
+      }]
+    });
+    
+    Promise
+      .all([accounts, item,])
+      .then(responses => {res.render('administration', {account: responses[0], book: responses[1]})})
+      .catch(err => console.log(err));
+  
+  // Account.findAll()
+  //       .then(account => {
+  //           res.render('administration', { account })
+  //       })
+  //       .catch(err => console.log(err));
 });
 
 router.get('/account/:id',checkAuthenticated, function(req, res, render) {
   const accountId = req.params.id;
+  console.log('Did something');
   Account.findAll({
     where: {
       accountId: accountId
@@ -82,6 +97,20 @@ router.put('/account/:id', checkAuthenticated, function(req, res) {
   })
   .catch(err => console.log(err));
 
+});
+
+router.delete('/account/delete/:id', checkAuthenticated, (req, res) => {
+  const accountId = req.params.id;
+  Account.destroy({
+    where: {
+      accountId: accountId
+    }
+  })
+  .then(() => {
+    console.log('Delete Successful');
+    res.redirect('/administration');
+  })
+  .catch(err => console.log(err));
 });
 
 router.get('/materials',checkAuthenticated, function(req, res, next) {

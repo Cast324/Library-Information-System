@@ -32,7 +32,8 @@ const Book_Item = sequelize.define('Book_Item', {
       allowNull: false
     }
   }, {
-    tableName: 'Book_Item'
+    tableName: 'Book_Item',
+    timestamps: false
   });
 
 module.exports = Book_Item;

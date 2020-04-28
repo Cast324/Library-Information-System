@@ -40,7 +40,8 @@ const Item = sequelize.define('Item', {
       }
     }
   }, {
-    tableName: 'Item'
+    tableName: 'Item',
+    timestamps: false
   });
 
 module.exports = Item;

@@ -13,6 +13,8 @@ const methodOverride = require('method-override')
 // const db = require('./public/javascripts/databasemanager');
 const db = require('./config/database');
 const Account = require('./models/Account.js');
+const Item = require('./models/Item');
+const Book = require('./models/Book_Item');
 
 
 
@@ -50,6 +52,8 @@ app.use(methodOverride('_method'))
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+
+//Sequelize Associations
 
 //Database Conection
 try {

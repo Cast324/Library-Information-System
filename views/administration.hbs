@@ -102,7 +102,7 @@
             <td>{{#if address}}{{address}}{{else}}Nothing on file{{/if}}</td>
             <td>{{email}}</td>
             <td><button type="button" class="btn btn-primary accountInfo" data-account="{{accountId}}">Edit</button>
-              <a href="#">delete</a>
+                <button type="button" class="btn btn-primary deleteAccount" data-account="{{accountId}}">Delete</button>
             </td>
           </tr>
           {{/account}}
@@ -131,7 +131,7 @@
           {{#book}}
           <tr>
             <th scope="row">{{barcode}}</th>
-            <td>{{book.title}}</td>
+            <td>{{barbode.title}}</td>
             <td>{{numberOfPages}}</td>
             <td>{{location}}</td>
             <td><a href="#">edit</a>
@@ -148,7 +148,7 @@
 
 </div>
 
-<!-- Account Modal -->
+<!-- Account Update Modal -->
       <div class="modal fade" id="accountModal" tabindex="-1" role="dialog" aria-labelledby="accountModal" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
           <div class="modal-content">
@@ -257,28 +257,50 @@
       </div>
       <!-- End Add Modal -->
 
-      <!-- RemoveModal Modal -->
-      <div class="modal fade" id="removeAccountModal" tabindex="-1" role="dialog" aria-labelledby="removeAccountModal" aria-hidden="true">
+<!-- Account Delete Modal -->
+      <div class="modal fade" id="accountDeleteModal" tabindex="-1" role="dialog" aria-labelledby="accountDeleteModal" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
           <div class="modal-content">
             <div class="modal-header">
-            <h5 class="modal-title" id="modalLabel">Remove Account</h5>
+            <h5 class="modal-title" id="modalLabel">Delete account </h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
             </button>
             </div>
           <div class="modal-body">
             <div class="form-group">
-               <form id="delete-account-form" method="POST" action="/administration/delete">
-              <!-- Remove Account by Number Form -->
-              <label class="control-label" for="removeAccountSNumber">Remove By Account Number</label>  
-              <input id="removeAccountSNumber" name="removeAccountSNumber" type="text" placeholder="" class="form-control input-md">
+              <!-- Account Type Form -->
+              <form id="account-delete" method="POST" action="/account/delete/">
+              <!-- First Name Form -->
+              <label class="control-label" for="firstName">First Name</label>
+              <input id="firstNameDelete" name="firstNameDelete" type="text" class="form-control input-md" disabled="true">
+              <!-- Last Name Form -->
+              <label class="control-label" for="lastName">Last Name</label>
+              <input id="lastNameDelete" name="lastNameDelete" type="text" class="form-control input-md" disabled="true">
+              <!-- Email Form -->
+              <label class="control-label" for="emailUpdate">Email</label>
+              <input id="emailDelete" name="emailDelete" type="text" class="form-control input-md" disabled="true">
+              <!-- Address Form -->
+              <div class="addressInput"> 
+              <label class="control-label" for="addressUpdate">Address (Patrons Only)</label>
+              <input id="addressDelete" name="addressDelete" type="text" class="form-control input-md" disabled="true"
+              <!-- Admin Status Radios -->
+              <label class="control-label" for="isAdminRadioDelete">Is user an Admin? (Staff Only)</label>
+              <div class="radioUpdate">
+                <label for="isAdminRadio-0">
+                <input type="radio" name="isAdminRadio" id="isAdminRadioDelete-0" value="0" disabled="true">No</label>
+                <label for="isAdminRadio-1">
+                <input type="radio" name="isAdminRadio" id="isAdminRadioDelete-1" value="1" disabled="true">Yes</label>
+              </div>
+              <!-- Password Form -->
+              <label class="control-label" for="passwordUpdate">Password</label>
+              <input id="passwordDelete" name="passwordDelete" type="text" class="form-control input-md" disabled="true">
             </div>
           </div>
           <div class="modal-footer">
             <!-- Form Buttons -->
-            <button id="saveAccountButton" name="removeAccountButton" class="btn btn-danger " value="submit">Remove</button>
-            <button id="cancelChangesButton" name="cancelRemovalButton" class="btn btn-primary" data-dismiss="modal">Cancel</button>
+            <button id="saveAccountButton" name="deleteAccountButton" value="submit" class="btn btn-success">Delete</button>
+            <button id="cancelChangesButton" name="cancelChangesButton" class="btn btn-danger" data-dismiss="modal">Cancel</button>
             </div>
             </form>
           </div>
@@ -286,31 +308,6 @@
       </div>
       <!-- End Add Modal -->
 
-      <!-- Begin Edit Modal -->
-      <div class="modal fade" id="editAccountModal" tabindex="-1" role="dialog" aria-labelledby="editAccountModal" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-          <div class="modal-content">
-            <div class="mnpodal-header">
-            <h5 class="modal-title" id="modalLabel">Edit Account</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-            </button>
-            </div>
-          <div class="modal-body">
-            <div class="form-group">
-              <!-- Edit Forms -->
-            </div>
-            <p>PLACEHOLDER</p>
-          </div>
-          <div class="modal-footer">
-            <!-- Form Buttons -->
-            <button id="saveAccountButton" name="removeAccountButton" class="btn btn-primary">Save</button>
-            <button id="cancelChangesButton" name="cancelRemovalButton" class="btn btn-danger" data-dismiss="modal">Cancel</button>
-            </div>
-          </div>
-        </div>
-      </div>
-  </div>
 
   <!-- Bootstrap core JavaScript -->
   <script src="vendor/jquery/jquery.min.js"></script>
@@ -342,8 +339,31 @@
         }
 
       });
+      });
 
-  });
+    $('.deleteAccount').click((event) => { 
+      $.ajax ({
+        url:'account/'+event.target.dataset.account+'/',
+        type: 'GET',
+        dataType: 'json',
+        success: (data) => {
+          $('.modal-body #firstNameDelete').val(data[0].firstName);
+          $('.modal-body #lastNameDelete').val(data[0].lastName);
+          $('.modal-body #emailDelete').val(data[0].email);
+          $('.modal-body #addressDelete').val(data[0].address);
+          $('.modal-body #passwordDelete').val(data[0].password);
+          if (data[0].isAdmin == 1) {
+            $('.modal-body #isAdminRadioDelete-1').prop('checked', true);
+          }
+          else {
+            $('.modal-body #isAdminRadioDelete-0').prop('checked', true);
+          }
+          $('#account-delete').attr('action', 'account/delete/'+event.target.dataset.account+'/?_method=DELETE');
+          $('#accountDeleteModal').modal('show');
+        }
+      });
+    });
+
   });
 </script>
 
