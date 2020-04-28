@@ -36,12 +36,7 @@ router.get('/landing',checkAuthenticated, function(req, res, next) {
 
 router.get('/administration',checkAuthenticated, function(req, res, next) {
     const accounts = Account.findAll();
-    const item = Item.findAll({
-      include: [{
-        model: Books,
-        as: 'Book_Items',
-      }]
-    });
+    const item = Item.findAll();
     
     Promise
       .all([accounts, item,])
