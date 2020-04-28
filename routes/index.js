@@ -7,7 +7,6 @@ var urlencodedParser = bodyParser.urlencoded({ extended: false});
 var accountId;
 const passport = require('passport');
 const Account = require('../models/Account');
-const Books = require('../models/Book_Item');
 const Item = require('../models/Item');
 
 
@@ -40,7 +39,7 @@ router.get('/administration',checkAuthenticated, function(req, res, next) {
     
     Promise
       .all([accounts, item,])
-      .then(responses => {res.render('administration', {account: responses[0], book: responses[1]})})
+      .then(responses => {res.render('administration', {account: responses[0], book: responses[1]}), console.log(responses[1]);})
       .catch(err => console.log(err));
   
   // Account.findAll()

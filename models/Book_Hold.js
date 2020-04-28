@@ -1,7 +1,7 @@
 const { Sequelize, DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
 
-const Book_Hold = sequelize.define('Book_Hold', {
+Book_Hold = sequelize.define('Book_Hold', {
     reservationId: {
       type: DataTypes.INTEGER(11),
       allowNull: false,
@@ -28,7 +28,7 @@ const Book_Hold = sequelize.define('Book_Hold', {
       type: DataTypes.CHAR(15),
       allowNull: false,
       references: {
-        model: 'Book_Item',
+        model: 'Item',
         key: 'barcode'
       }
     }
@@ -36,4 +36,4 @@ const Book_Hold = sequelize.define('Book_Hold', {
     tableName: 'Book_Hold'
   });
 
-  module.exports = Book_Hold;
+module.exports = Book_Hold;
