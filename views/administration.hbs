@@ -60,7 +60,7 @@
   <!-- Page Content -->
 <div class="container">
 
-  <div class="col-lg-12 text-center" style="padding: 30px">
+  <div class="col-lg-12 text-center" style="padding-top: 30px">
     <h3>Administration</h3>
     <p>View, Edit, Add, and Remove Items, Collections, and Patron Accounts.</p>
 
@@ -69,8 +69,6 @@
 
     <a class="btn btn-primary" data-toggle="collapse" href="#collapseMaterials" role="button" aria-expanded="false"
       aria-controls="collapseMaterials">MATERIALS</a>
-    
-    <button id="testButton" class="btn btn-primary">Test</button>
 
 
   </div>
@@ -121,24 +119,25 @@
       <table class="table table-bordered table-hover">
         <thead>
           <tr>
-            <th scope="col">S#</th>
-            <th scope="col">First</th>
-            <th scope="col">Last</th>
-            <th scope="col">Address</th>
+            <th scope="col">Barcode</th>
+            <th scope="col">Title</th>
+            <th scope="col">Format</th>
+            <th scope="col">Location</th>
+            <th scope="col">Controls</th>
           </tr>
         </thead>
         <tbody>
-          {{#book}}
+          {{#item}}
           <tr>
             <th scope="row">{{barcode}}</th>
-            <td>{{barbode.title}}</td>
-            <td>{{numberOfPages}}</td>
+            <td>{{format}}</td>
+            <td>{{title}}</td>
             <td>{{location}}</td>
-            <td><a href="#">edit</a>
+            <td><button type="button" class="btn btn-primary accountInfo" data-item="{{barcode}}">Edit</button>
               <a href="#">delete</a>
             </td>
           </tr>
-          {{/book}}
+          {{/item}}
         </tbody>
       </table>
     </div>
@@ -308,6 +307,31 @@
       </div>
       <!-- End Add Modal -->
 
+      <!-- Begin Edit Modal -->
+      <div class="modal fade" id="editAccountModal" tabindex="-1" role="dialog" aria-labelledby="editAccountModal" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="mnpodal-header">
+            <h5 class="modal-title" id="modalLabel">Edit Account</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+            </div>
+          <div class="modal-body">
+            <div class="form-group">
+              <!-- Edit Forms -->
+            </div>
+            <p>PLACEHOLDER</p>
+          </div>
+          <div class="modal-footer">
+            <!-- Form Buttons -->
+            <button id="saveAccountButton" name="removeAccountButton" class="btn btn-primary">Save</button>
+            <button id="cancelChangesButton" name="cancelRemovalButton" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+            </div>
+          </div>
+        </div>
+      </div>
+  </div>
 
   <!-- Bootstrap core JavaScript -->
   <script src="vendor/jquery/jquery.min.js"></script>
