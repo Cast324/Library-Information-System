@@ -245,8 +245,9 @@ router.post('/circulation/:accountId/:itemId', checkAuthenticated, (req, res) =>
   const itemId = req.params.itemId;
 
   console.log(accountId, itemId);
-});
   res.redirect('/circulation');
+});
+  
 
 router.get('/reference',checkAuthenticated, function(req, res, next) {
   res.render('reference');
