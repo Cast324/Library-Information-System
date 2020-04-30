@@ -1,7 +1,7 @@
 const { Sequelize, DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
 
-const Item = sequelize.define('Item', {
+Item = sequelize.define('Item', {
     barcode: {
       type: DataTypes.CHAR(15),
       allowNull: false,
@@ -13,10 +13,6 @@ const Item = sequelize.define('Item', {
     },
     format: {
       type: DataTypes.STRING(100),
-      allowNull: false
-    },
-    addedDate: {
-      type: DataTypes.DATEONLY,
       allowNull: false
     },
     language: {
@@ -38,10 +34,28 @@ const Item = sequelize.define('Item', {
         model: 'Collection',
         key: 'collectionId'
       }
-    }
+    },
+    checkedOut: {
+      type: DataTypes.INTEGER(1),
+      allowNull: true,
+      defaultValue: '0'
+    },
+    onHold: {
+      type: DataTypes.INTEGER(1),
+      allowNull: true,
+      defaultValue: '0'
+    },
+    location: {
+      type: DataTypes.STRING(30),
+      allowNull: false,
+      defaultValue: '0'
+    },
+    updatedAt: {
+      type: DataTypes.DATEONLY,
+      allowNull: true
+    },
   }, {
-    tableName: 'Item',
-    timestamps: false
+    tableName: 'Item'
   });
 
 module.exports = Item;

@@ -1,7 +1,7 @@
 const { Sequelize, DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
 
-const Book_Lending = sequelize.define('Book_Lending', {
+Book_Lending = sequelize.define('Book_Lending', {
     accountId: {
       type: DataTypes.INTEGER(11),
       allowNull: false,
@@ -9,15 +9,6 @@ const Book_Lending = sequelize.define('Book_Lending', {
       references: {
         model: 'Account',
         key: 'accountId'
-      }
-    },
-    barcode: {
-      type: DataTypes.CHAR(15),
-      allowNull: false,
-      primaryKey: true,
-      references: {
-        model: 'Book_Item',
-        key: 'barcode'
       }
     },
     creationDate: {
@@ -31,9 +22,18 @@ const Book_Lending = sequelize.define('Book_Lending', {
     returnDate: {
       type: DataTypes.DATEONLY,
       allowNull: true
+    },
+    barcode: {
+      type: DataTypes.CHAR(15),
+      allowNull: false,
+      primaryKey: true,
+      references: {
+        model: 'Item',
+        key: 'barcode'
+      }
     }
   }, {
     tableName: 'Book_Lending'
   });
 
-module.exports = Book_Lending;
+  module.exports = Book_Lending;
