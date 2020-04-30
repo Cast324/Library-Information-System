@@ -29,8 +29,15 @@ function checkNotAuthenticated(req, res, next) {
 
   next()
 }
-router.get('/landing',checkAuthenticated, function(req, res, next) {
-  res.render('landing');
+router.get('/landing',checkAuthenticated, async function(req, res, next) {
+  const admin = {
+    admin: false
+  }
+  const user = await req.user
+  if(user[0].dataValues.isAdmin == 1) {
+    admin.admin = true
+  }
+  res.render('landing', admin);
 });
 
 router.get('/administration',checkAuthenticated, function(req, res, next) {
@@ -175,10 +182,28 @@ function dbQuery(sql, callback) {
     return callback(result.insertId)
   })
 }
-router.get('/circulation',checkAuthenticated, function(req, res, next) {
-  res.render('circulation');
+router.get('/circulation',checkAuthenticated, async function(req, res, next) {
+  const admin = {
+    admin: false
+  }
+  const user = await req.user
+  if(user[0].dataValues.isAdmin == 1) {
+    admin.admin = true
+  }
+  res.render('circulation', admin);
 });
 
+router.get('/reference',checkAuthenticated, async function(req, res, next) {
+  const admin = {
+    admin: false
+  }
+  const user = await req.user
+  if(user[0].dataValues.isAdmin == 1) {
+    admin.admin = true
+  }
+  res.render('reference',admin);
+  
+});
 router.get('/circulation/:accountId/:itemId', checkAuthenticated, (req, res) => {
   const accountId = req.params.accountId;
   const itemId = req.params.itemId;
@@ -213,10 +238,6 @@ router.get('/circulation/:accountId/:itemId', checkAuthenticated, (req, res) => 
       })
       .catch(err => console.log(err));
 
-});
-
-router.get('/reference',checkAuthenticated, function(req, res, next) {
-  res.render('reference');
 });
 
 router.get('/itportal',checkAuthenticated, function(req, res, next) {

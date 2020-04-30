@@ -4,7 +4,6 @@ const bcryptjs = require('bcryptjs')
 function initialize(passport, getUserByEmail, getUserById) {
   const authenticateUser = async (email, password, done) => {
     const user = await getUserByEmail(email)
-    console.log(user)
     if (user == null) {
       console.log('null')
       return done(null, false, { message: 'Invalid Email or Password' })
