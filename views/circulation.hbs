@@ -91,28 +91,68 @@
     <h4 style="padding-top: 25px;">Quick Check-Out to Patron</h2>
     <p>Scan/enter a material barcode and a patron ID to quickly check-out.</p>
 
+    <form id="checkout-form" method="POST" action="circulation/1/1">
     <div class="row input-group">
       <div class="input-group-prepend">
-        <span class="input-group-text" >Scan/Enter Item Barcode</span>
+        <span class="input-group-text" >Scan/Enter Patron ID</span>
       </div>
-      <input type="text" class="form-control">
+      <input id="patronIdInput" name="patronIdInput" type="number" class="form-control" required="">
 
       <div class="input-group-prepend">
         <span class="input-group-text" >Scan/Enter Item Barcode</span>
       </div>
-      <input type="text" class="form-control">
+      <input type="number" id="itemIdInput" name="itemIdInput" class="form-control" required="">
     </div>
 
     <div class="row" style="padding: 10px">
-          <div class="col"><button type="button" class="btn btn-primary btn-lg btn-block">Check-Out To Patron</button></div>
+          <div class="col"><button type="submit" id="check-out-submit" value="submit" class="btn btn-primary btn-lg btn-block">Check-Out To Patron</button></div>
     </div>
+    </form>
   
   </div>
   
   </div>
 
   <!-- Bootstrap core JavaScript -->
-  <script src="vendor/jquery/jquery.slim.min.js"></script>
+  <script src="vendor/jquery/jquery.min.js"></script>
   <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script type="text/javascript">
+  $(document).ready(() => {
+    $('#checkout-form').submit((event) => {
+      var e = event;
+      var accountId = $('#patronIdInput').val();
+      var itemId = $('#itemIdInput').val();
+      $.ajax ({
+        url:'circulation/'+accountId+'/'+itemId+'/',
+        type: 'GET',
+        dataType: 'json',
+        success: (data) => {
+          console.log(data);
+          console.log(`${data[0]} , ${data[1]}`);
+          if (data[0] == false || data[1] == false) {
+            if (data[0] == false) {
+              e.preventDefault(e);
+              alert("Could Not find Account");
+              $('#patronIdInput').select();
+
+            }
+            if (data[1] == false) {
+              e.preventDefault(e);
+              alert("Could not find Item");
+              $('#itemIdInput').select();
+            }
+          }
+          else{
+            $('#checkout-form').attr('action', 'circulation/'+accountId+'/'+itemId+'/');
+            $('#checkout-form').submit();
+
+          }
+
+
+        }
+      });
+    });
+  });
+</script><script type="text"
 
 </body>

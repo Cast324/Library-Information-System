@@ -41,12 +41,7 @@ router.get('/administration',checkAuthenticated, function(req, res, next) {
       .all([accounts, item,])
       .then(responses => {res.render('administration', {account: responses[0], book: responses[1]}), console.log(responses[1]);})
       .catch(err => console.log(err));
-  
-  // Account.findAll()
-  //       .then(account => {
-  //           res.render('administration', { account })
-  //       })
-  //       .catch(err => console.log(err));
+
 });
 
 router.get('/account/:id',checkAuthenticated, function(req, res, render) {
@@ -182,6 +177,42 @@ function dbQuery(sql, callback) {
 }
 router.get('/circulation',checkAuthenticated, function(req, res, next) {
   res.render('circulation');
+});
+
+router.get('/circulation/:accountId/:itemId', checkAuthenticated, (req, res) => {
+  const accountId = req.params.accountId;
+  const itemId = req.params.itemId;
+  console.log(accountId);
+  console.log(itemId);
+
+  const accounts = Account.findAll({
+    where : {
+      accountId: accountId
+    }
+  });
+  const item = Item.findAll({
+    where: {
+      barcode: itemId
+    }
+  });
+    
+    Promise
+      .all([accounts, item,])
+      .then(responses => {
+        var foundArray = [];
+        for (i = 0; i < responses.length; i++) {
+          if (responses[i].length > 0 ) {
+            foundArray[i] = true;
+          }
+          else {
+            foundArray[i] = false;
+          }
+        }
+        console.log(responses[0]);
+        res.send(foundArray);
+      })
+      .catch(err => console.log(err));
+
 });
 
 router.get('/reference',checkAuthenticated, function(req, res, next) {

@@ -15,10 +15,6 @@ Item = sequelize.define('Item', {
       type: DataTypes.STRING(100),
       allowNull: false
     },
-    createdAt: {
-      type: DataTypes.DATEONLY,
-      allowNull: false
-    },
     language: {
       type: DataTypes.STRING(50),
       allowNull: true
