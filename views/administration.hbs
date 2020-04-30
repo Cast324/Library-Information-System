@@ -140,8 +140,8 @@
             <td>{{format}}</td>
             <td>{{language}}</td>
             <td>{{location}}</td>
-            <td><button type="button" class="btn btn-primary bookUpdate" data-book_item="{{barcode}}">Edit</button>
-              <button type="button" class="btn btn-primary deleteBook" data-book_item="{{barcode}}">Delete</button>
+            <td><button type="button" class="btn btn-primary bookUpdate" data-item="{{barcode}}">Edit</button>
+              <button type="button" class="btn btn-primary deleteBook" data-item="{{barcode}}">Delete</button>
             </td>
           </tr>
           {{/book}}
@@ -295,7 +295,6 @@
         </div>
       </div>
 
-
 <!-- Account Add Modal -->
       <div class="modal fade" id="createAccountModal" tabindex="-1" role="dialog" aria-labelledby="createAccountModal" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
@@ -352,7 +351,6 @@
         </div>
       </div>
 
-
 <!-- Book Add Modal -->
       <div class="modal fade" id="createBookModal" tabindex="-1" role="dialog" aria-labelledby="createBookModal" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
@@ -368,9 +366,6 @@
               <!-- Book Title Form -->
               <label class="control-label" for="bookTitleInput">Book Title</label>
               <input id="bookTitleInput" name="bookTitleInput" type="text" placeholder="Title" class="form-control input-md" required="">
-              <!-- Book Author Form -->
-              <label class="control-label" for="bookAuthorInput">Book Author</label>
-              <input id="bookAuthorInput" name="bookAuthorInput" type="text" placeholder="Author" class="form-control input-md" required="">
               <!-- Language Form -->
               <form id="bookLanguage-form" method="POST" action="/administration">
               <label class="control-label" for="bookLanguage">Language</label>
@@ -395,8 +390,8 @@
               <form id="bookColleciton-form" method="POST" action="/administration">
               <label class="control-label" for="bookCollection">Collection</label>
               <select id="bookCollection" name="bookCollection" class="form-control">
-                <option value="mainCollection">Main Collection</option>
-                <option value="specialCollection">Special Collection</option>
+                <option value="1">Main Collection</option>
+                <option value="2">Special Collection</option>
               </select>
             </div>
           </div>
@@ -409,7 +404,6 @@
           </div>
         </div>
       </div>
-
 
 <!-- Collection Add Modal -->
       <div class="modal fade" id="createCollectionModal" tabindex="-1" role="dialog" aria-labelledby="createCollectionModal" aria-hidden="true">
@@ -440,7 +434,6 @@
           </div>
         </div>
       </div>
-
 
 <!-- Account Delete Modal -->
       <div class="modal fade" id="accountDeleteModal" tabindex="-1" role="dialog" aria-labelledby="accountDeleteModal" aria-hidden="true">
@@ -500,7 +493,7 @@
   <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
   <script src="public/javascripts/formscript.js"></script>
 
-  <!--ACCOUNT SCRIPTs-->
+  <!--ACCOUNT SCRIPTS-->
   <script type="text/javascript">
   $(document).ready(() => {
     $('.accountInfo').click((event) => {
@@ -560,16 +553,16 @@
 $(document).ready(() => {
     $('.bookUpdate').click((event) => {
         $.ajax ({
-        url: 'item/'+event.target.dataset.book_item+'/',
+        url: 'item/'+event.target.dataset.item+'/',
         type: 'GET',
         dataType: 'json',
         success: (data) => {
           $('.modal-body #bookTitleInput').val(data[0].title);
           $('.modal-body #bookFormat').val(data[0].format);
-          $('#book-update').attr('action', 'book/'+event.target.dataset.item+'/?_method=PUT');
+          $('#book-update').attr('action', 'item/'+event.target.dataset.item+'/?_method=PUT');
           $('#bookUpdateModal').modal('show');
           console.log('ajax success', data);
-          console.log(data[0].firstName);
+          console.log(data[0].title);
         }
 
       });
@@ -577,13 +570,13 @@ $(document).ready(() => {
 
     $('.deleteBook').click((event) => { 
       $.ajax ({
-        url:'book/'+event.target.dataset.account+'/',
+        url:'item/'+event.target.dataset.item+'/',
         type: 'GET',
         dataType: 'json',
         success: (data) => {
-          $('.modal-body #firstNameDelete').val(data[0].firstName);
-          $('.modal-body #lastNameDelete').val(data[0].lastName);
-          $('#account-delete').attr('action', 'account/delete/'+event.target.dataset.account+'/?_method=DELETE');
+          $('.modal-body #bookTitleInput').val(data[0].title);
+          $('.modal-body #bookFormat').val(data[0].format);
+          $('#book-delete').attr('action', 'item/delete/'+event.target.dataset.item+'/?_method=DELETE');
           $('#bookUpdateModal').modal('show');
         }
       });
