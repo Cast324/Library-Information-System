@@ -67,11 +67,11 @@
     <a class="btn btn-primary" data-toggle="collapse" href="#collapseAccounts" role="button" aria-expanded="false"
       aria-controls="collapseAccounts">ACCOUNTS</a>
 
-    <a class="btn btn-primary" data-toggle="collapse" href="#collapseMaterials" role="button" aria-expanded="false"
-      aria-controls="collapseMaterials">MATERIALS</a>
+    <a class="btn btn-primary" data-toggle="collapse" href="#collapseBooks" role="button" aria-expanded="false"
+      aria-controls="collapseBooks">BOOKS</a>
 
     <a class="btn btn-primary" data-toggle="collapse" href="#collapseCollections" role="button" aria-expanded="false"
-      aria-controls="collapseMaterials">COLLECTIONS</a>
+      aria-controls="collapseCollections">COLLECTIONS</a>
 
 
   </div>
@@ -113,14 +113,14 @@
     </div>
   </div>
 
-<!-- MATERIALS -->
-  <div class="row collapse" id="collapseMaterials" style="padding: 10px">
+<!-- Books -->
+  <div class="row collapse" id="collapseBooks" style="padding: 10px">
     <div class="col"><button type="button" class="btn btn-primary btn-lg btn-block" data-toggle="modal"
-        data-target="#createMaterialModal">Add New Materials</button></div>
+        data-target="#createBookModal">Add New Books</button></div>
 
     <!-- Table Area -->
     <div class="col-lg-12 text-center" style="padding: 10px">
-      <h3 id="patronAccountsHeading">Materials</h3>
+      <h3 id="patronAccountsHeading">Books</h3>
       <table class="table table-bordered table-hover">
         <thead>
           <tr>
@@ -238,7 +238,7 @@
       </div>
 <!-- End Modal -->
 
-      <!-- Add Modal -->
+<!-- Account Add Modal -->
       <div class="modal fade" id="createAccountModal" tabindex="-1" role="dialog" aria-labelledby="createAccountModal" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
           <div class="modal-content">
@@ -287,6 +287,51 @@
           <div class="modal-footer">
             <!-- Form Buttons -->
             <button id="saveAccountButton" name="saveAccountButton" value="submit" class="btn btn-success">Save</button>
+            <button id="cancelChangesButton" name="cancelChangesButton" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+            </div>
+            </form>
+          </div>
+        </div>
+      </div>
+<!-- End Modal -->
+
+<!-- Book Add Modal -->
+      <div class="modal fade" id="createBookModal" tabindex="-1" role="dialog" aria-labelledby="createBookModal" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+            <h5 class="modal-title" id="modalLabel">Create New Book</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+            </div>
+          <div class="modal-body">
+            <div class="form-group">
+              <!-- Book Title Form -->
+              <label class="control-label" for="bookTitleInput">Book Title</label>
+              <input id="bookTitleInput" name="bookTitleInput" type="text" placeholder="Title" class="form-control input-md" required="">
+              <!-- Book Author Form -->
+              <label class="control-label" for="bookAuthorInput">Book Author</label>
+              <input id="bookAuthorInput" name="bookAuthorInput" type="text" placeholder="Author" class="form-control input-md" required="">
+              <!-- Language Form -->
+              <form id="bookLanguage-form" method="POST" action="/administration">
+              <label class="control-label" for="bookLanguage">Language</label>
+              <select id="bookLanguage" name="bookLanguage" class="form-control">
+                <option value="english">English</option>
+                <option value="spanish">Spanish</option>
+              </select>
+              <!-- Collection Form -->
+              <form id="bookColleciton-form" method="POST" action="/administration">
+              <label class="control-label" for="bookCollection">Collection</label>
+              <select id="bookCollection" name="bookCollection" class="form-control">
+                <option value="mainCollection">Main Collection</option>
+                <option value="specialCollection">Special Collection</option>
+              </select>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <!-- Form Buttons -->
+            <button id="saveBookButton" name="saveBookButton" value="submit" class="btn btn-success">Save</button>
             <button id="cancelChangesButton" name="cancelChangesButton" class="btn btn-danger" data-dismiss="modal">Cancel</button>
             </div>
             </form>
