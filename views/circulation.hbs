@@ -120,6 +120,7 @@
   $(document).ready(() => {
     $('#checkout-form').submit((event) => {
       var e = event;
+      e.preventDefault(e);
       var accountId = $('#patronIdInput').val();
       var itemId = $('#itemIdInput').val();
       $.ajax ({
@@ -144,7 +145,7 @@
           }
           else{
             $('#checkout-form').attr('action', 'circulation/'+accountId+'/'+itemId+'/');
-            $('#checkout-form').submit();
+            $('#checkout-form').unbind('submit').submit();
 
           }
 
