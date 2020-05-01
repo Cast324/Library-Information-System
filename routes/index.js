@@ -348,7 +348,6 @@ router.get('/reference',checkAuthenticated, function(req, res, next) {
   res.render('reference');
 });
 
-router.get('/itportal',checkAuthenticated, function(req, res, next) {
 router.get('/itportal', checkAuthenticated, function (req, res, next) {
   res.render('itportal');
 });
