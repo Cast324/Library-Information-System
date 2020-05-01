@@ -276,6 +276,20 @@ router.get('/circulation/:accountId/:itemId', checkAuthenticated, (req, res) => 
 
 });
 
+router.post('/circulation/:accountId/:itemId', checkAuthenticated, (req, res) => {
+  const accountId = req.params.accountId;
+  const itemId = req.params.itemId;
+
+  console.log(accountId, itemId);
+  res.redirect('/circulation');
+});
+  
+
+router.get('/reference',checkAuthenticated, function(req, res, next) {
+  res.render('reference');
+});
+
+router.get('/itportal',checkAuthenticated, function(req, res, next) {
 router.get('/itportal', checkAuthenticated, function (req, res, next) {
   res.render('itportal');
 });
