@@ -78,17 +78,18 @@
 
     <h4 style="padding-top: 25px;">Quick Check-In</h2>
     <p>Scan/enter a material barcode to quickly check-in.</p>
-
+    <form id="checkin-form" method="POST" action="circulation">
     <div class="row input-group">
       <div class="input-group-prepend">
         <span class="input-group-text" id="">Scan/Enter Item Barcode</span>
       </div>
-      <input type="text" class="form-control">
+      <input type="number" id="checkInItemInput" name="checkInItemInput" class="form-control" required="">
     </div>
 
     <div class="row" style="padding: 10px">
-      <div class="col"><button type="button" class="btn btn-primary btn-lg btn-block">Check-In</button></div>
+      <div class="col"><button type="submit" id="checkin-submit" value="submit" class="btn btn-primary btn-lg btn-block">Check-In</button></div>
     </div>
+    </form>
 
     <h4 style="padding-top: 25px;">Quick Check-Out to Patron</h2>
     <p>Scan/enter a material barcode and a patron ID to quickly check-out.</p>
@@ -107,7 +108,7 @@
     </div>
 
     <div class="row" style="padding: 10px">
-          <div class="col"><button type="submit" id="check-out-submit" value="submit" class="btn btn-primary btn-lg btn-block">Check-Out To Patron</button></div>
+          <div class="col"><button type="submit" id="checkout-submit" value="submit" class="btn btn-primary btn-lg btn-block">Check-Out To Patron</button></div>
     </div>
     </form>
   
@@ -132,16 +133,19 @@
         success: (data) => {
           console.log(data);
           console.log(`${data[0]} , ${data[1]}`);
-          if (data[0] == false || data[1] == false) {
+          if (data[0] == false || data[1] == false || data[2] == true) {
             if (data[0] == false) {
               e.preventDefault(e);
               alert("Could Not find Account");
               $('#patronIdInput').select();
 
-            }
-            if (data[1] == false) {
+            } else if (data[1] == false) {
               e.preventDefault(e);
               alert("Could not find Item");
+              $('#itemIdInput').select();
+            } else if (data[2] ==  true) {
+              e.preventDefault(e);
+              alert("Item is already checked out");
               $('#itemIdInput').select();
             }
           }
@@ -155,7 +159,20 @@
         }
       });
     });
+    $('#checkin-form').submit((event) => {
+      event.preventDefault();
+      var itemId = $('#checkInItemInput').val();
+      $.ajax({
+        url:'circulation/'+itemId+'/',
+        type: 'POST',
+        dataType: 'json',
+        success: (data) => {
+            console.log(data);
+      
+    }
+    });
   });
-</script><script type="text"
+  });
+</script>
 
 </body>

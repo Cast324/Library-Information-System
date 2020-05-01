@@ -30,6 +30,10 @@ const Book_Item = sequelize.define('Book_Item', {
     location: {
       type: DataTypes.STRING(100),
       allowNull: false
+    },
+    author: {
+      type: DataTypes.STRING(100),
+      allowNull: false
     }
   }, {
     tableName: 'Book_Item',

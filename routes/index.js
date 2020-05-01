@@ -8,6 +8,7 @@ var accountId;
 const passport = require('passport');
 const Account = require('../models/Account');
 const Item = require('../models/Item');
+const Book_Lending = require('../models/Book_Lending');
 
 
 /* GET home page. */
@@ -53,7 +54,6 @@ router.get('/administration',checkAuthenticated, function(req, res, next) {
 
 router.get('/account/:id',checkAuthenticated, function(req, res, render) {
   const accountId = req.params.id;
-  console.log('Did something');
   Account.findAll({
     where: {
       accountId: accountId
@@ -175,13 +175,6 @@ router.post('/administration', checkAuthenticated,  urlencodedParser, function(r
   // res.redirect('/administration');
 });
 
-function dbQuery(sql, callback) {
-  databasemanager.query(sql, function(err, result) {
-    if (err) throw err;
-    console.log("account record made, ID: " + result.insertId);
-    return callback(result.insertId)
-  })
-}
 router.get('/circulation',checkAuthenticated, async function(req, res, next) {
   const admin = {
     admin: false
@@ -204,11 +197,47 @@ router.get('/reference',checkAuthenticated, async function(req, res, next) {
   res.render('reference',admin);
   
 });
+router.post('/circulation/:itemId', checkAuthenticated, (req, res) => {
+  const itemId = req.params.itemId;
+
+  Item.findAll({
+    where: {
+      barcode: itemId
+    }
+  })
+  .then((item)=> {
+    console.log(item);
+    if (item[0] == undefined) {
+      res.send(false);
+    } else{
+      res.send(true);
+      checkIn(itemId);
+    }
+  })
+  .catch((err) =>{
+    console.log(err);
+    res.send(false);
+  });
+});
+
+function checkIn(itemId) {
+  Item.update({
+    checkedOut: 0
+  },{
+    where: {
+      barcode: itemId
+    }
+  })
+  .then(() => {
+    console.log('check in successful');
+  })
+  .catch((err) =>{
+    console.log(err);
+  });
+}
 router.get('/circulation/:accountId/:itemId', checkAuthenticated, (req, res) => {
   const accountId = req.params.accountId;
   const itemId = req.params.itemId;
-  console.log(accountId);
-  console.log(itemId);
 
   const accounts = Account.findAll({
     where : {
@@ -220,6 +249,7 @@ router.get('/circulation/:accountId/:itemId', checkAuthenticated, (req, res) => 
       barcode: itemId
     }
   });
+
     
     Promise
       .all([accounts, item,])
@@ -233,7 +263,12 @@ router.get('/circulation/:accountId/:itemId', checkAuthenticated, (req, res) => 
             foundArray[i] = false;
           }
         }
-        console.log(responses[0]);
+        if (responses[1][0].dataValues.checkedOut == true) {
+          foundArray[i] = true;
+        } else {
+          foundArray[i] = false;
+        }
+        console.log(foundArray[2])
         res.send(foundArray);
       })
       .catch(err => console.log(err));
@@ -243,8 +278,38 @@ router.get('/circulation/:accountId/:itemId', checkAuthenticated, (req, res) => 
 router.post('/circulation/:accountId/:itemId', checkAuthenticated, (req, res) => {
   const accountId = req.params.accountId;
   const itemId = req.params.itemId;
+  let current_datetime = new Date();
+  let dueDate = new Date();
+  dueDate.setDate((current_datetime.getDate() +21));
+  let dbDate = current_datetime.getFullYear() + "-" + (current_datetime.getMonth() + 1) + "-" + current_datetime.getDate();
+  let dueDbDate = dueDate.getFullYear() + "-" + (dueDate.getMonth() + 1) + "-" + current_datetime.getDate();
 
-  console.log(accountId, itemId);
+  console.log(dbDate, dueDbDate);
+  const book_lending = Book_Lending.create({
+    accountId: accountId,
+    creationDate: dbDate,
+    dueDate: dueDbDate,
+    barcode: itemId
+  });
+  const item = Item.update({
+    checkedOut: 1
+  },{
+    where: {
+      barcode: itemId
+    }
+  });
+
+  Promise
+      .all([book_lending, item])
+      .then(() => {
+        console.log('Checkout Successful');
+        res.redirect('/circulation');
+      })
+      .catch(err => console.log(err));
+
+
+
+  
   res.redirect('/circulation');
 });
   

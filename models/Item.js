@@ -50,6 +50,10 @@ Item = sequelize.define('Item', {
       allowNull: false,
       defaultValue: '0'
     },
+    author: {
+      type: DataTypes.STRING(100),
+      allowNull: false,
+    },
     updatedAt: {
       type: DataTypes.DATEONLY,
       allowNull: true

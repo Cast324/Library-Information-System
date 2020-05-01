@@ -33,7 +33,8 @@ Book_Lending = sequelize.define('Book_Lending', {
       }
     }
   }, {
-    tableName: 'Book_Lending'
+    tableName: 'Book_Lending',
+    timestamps: false 
   });
 
   module.exports = Book_Lending;
