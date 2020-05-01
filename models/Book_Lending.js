@@ -2,10 +2,15 @@ const { Sequelize, DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
 
 Book_Lending = sequelize.define('Book_Lending', {
-    accountId: {
+    transactionId: {
       type: DataTypes.INTEGER(11),
       allowNull: false,
       primaryKey: true,
+      autoIncrement: true
+    },
+    accountId: {
+      type: DataTypes.INTEGER(11),
+      allowNull: false,
       references: {
         model: 'Account',
         key: 'accountId'
@@ -26,7 +31,6 @@ Book_Lending = sequelize.define('Book_Lending', {
     barcode: {
       type: DataTypes.CHAR(15),
       allowNull: false,
-      primaryKey: true,
       references: {
         model: 'Item',
         key: 'barcode'
@@ -34,7 +38,7 @@ Book_Lending = sequelize.define('Book_Lending', {
     }
   }, {
     tableName: 'Book_Lending',
-    timestamps: false 
+    timestamps: false
   });
 
   module.exports = Book_Lending;

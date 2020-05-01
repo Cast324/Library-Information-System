@@ -167,7 +167,20 @@
         type: 'POST',
         dataType: 'json',
         success: (data) => {
-            console.log(data);
+          if (data['exists'] == false) {
+            alert("Item does not exist");
+            $('#checkInItemInput').select();
+          } else if (data['exists'] == true) {
+            if (data['exists'] == true && data['checkedOut'] == false){
+              alert("Book already Checked In");
+              $('#checkInItemInput').prop('val', '');
+              $('#checkInItemInput').select();
+            }else{
+              alert("CheckIn successful");
+              $('#checkInItemInput').select();
+            }
+          }
+            console.log(data['exits']);
       
     }
     });

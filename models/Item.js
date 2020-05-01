@@ -50,16 +50,20 @@ Item = sequelize.define('Item', {
       allowNull: false,
       defaultValue: '0'
     },
-    author: {
-      type: DataTypes.STRING(100),
-      allowNull: false,
+    createdAt: {
+      type: DataTypes.DATEONLY,
+      allowNull: false
     },
     updatedAt: {
       type: DataTypes.DATEONLY,
       allowNull: true
     },
+    author: {
+      type: DataTypes.STRING(100),
+      allowNull: false
+    }
   }, {
-    tableName: 'Item'
+    tableName: 'Item',
   });
 
-module.exports = Item;
+  module.exports = Item;

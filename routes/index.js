@@ -235,7 +235,7 @@ router.get('/reference', checkAuthenticated, async function (req, res, next) {
 });
 router.post('/circulation/:itemId', checkAuthenticated, (req, res) => {
   const itemId = req.params.itemId;
-
+  var data = {};
   Item.findAll({
     where: {
       barcode: itemId
@@ -244,10 +244,26 @@ router.post('/circulation/:itemId', checkAuthenticated, (req, res) => {
   .then((item)=> {
     console.log(item);
     if (item[0] == undefined) {
-      res.send(false);
+      data = {
+        'exists': false,
+        'chekedOut': false
+      }
+      res.send(data);
     } else{
-      res.send(true);
-      checkIn(itemId);
+      if(item[0].dataValues.checkedOut == 0){
+        data = {
+          'exists': true,
+          'checkedOut': false
+        }
+        res.send(data)
+      }else{
+          data = {
+            'exists': true,
+            'checkedOut': true
+          }
+          checkIn(itemId);
+          res.send(data);
+        }
     }
   })
   .catch((err) =>{
@@ -282,7 +298,7 @@ router.get('/circulation/:accountId/:itemId', checkAuthenticated, (req, res) => 
   });
   const item = Item.findAll({
     where: {
-      barcode: itemId
+      barcode: itemId,
     }
   });
     
@@ -298,7 +314,13 @@ router.get('/circulation/:accountId/:itemId', checkAuthenticated, (req, res) => 
             foundArray[i] = false;
           }
         }
-        console.log(responses[0]);
+        if (responses[1] != undefined) {
+          if (responses[1][0].dataValues.checkedOut == 1){
+            foundArray[i] = true;
+          } else {
+            foundArray[i] = false
+          }
+        }
         res.send(foundArray);
       })
       .catch(err => console.log(err));
@@ -337,10 +359,6 @@ router.post('/circulation/:accountId/:itemId', checkAuthenticated, (req, res) =>
       })
       .catch(err => console.log(err));
 
-
-
-  
-  res.redirect('/circulation');
 });
   
 
