@@ -3,7 +3,7 @@ var router = express.Router();
 // var databasemanager = require('../public/javascripts/databasemanager.js');
 var databasemanager = require('../config/database.js');
 var bodyParser = require('body-parser');
-var urlencodedParser = bodyParser.urlencoded({ extended: false});
+var urlencodedParser = bodyParser.urlencoded({ extended: false });
 var accountId;
 const passport = require('passport');
 const Account = require('../models/Account');
@@ -12,7 +12,7 @@ const Book_Lending = require('../models/Book_Lending');
 
 
 /* GET home page. */
-router.get('/', checkNotAuthenticated, function(req, res, next) {
+router.get('/', checkNotAuthenticated, function (req, res, next) {
   res.render('index');
 });
 //This is my change
@@ -30,42 +30,102 @@ function checkNotAuthenticated(req, res, next) {
 
   next()
 }
-router.get('/landing',checkAuthenticated, async function(req, res, next) {
+router.get('/landing', checkAuthenticated, async function (req, res, next) {
   const admin = {
     admin: false
   }
   const user = await req.user
-  if(user[0].dataValues.isAdmin == 1) {
+  if (user[0].dataValues.isAdmin == 1) {
     admin.admin = true
   }
   res.render('landing', admin);
 });
 
-router.get('/administration',checkAuthenticated, function(req, res, next) {
-    const accounts = Account.findAll();
-    const item = Item.findAll();
-    
-    Promise
-      .all([accounts, item,])
-      .then(responses => {res.render('administration', {account: responses[0], book: responses[1]}), console.log(responses[1]);})
-      .catch(err => console.log(err));
+router.get('/administration', checkAuthenticated, function (req, res, next) {
+  const accounts = Account.findAll();
+  const item = Item.findAll();
+
+  Promise
+    .all([accounts, item,])
+    .then(responses => { res.render('administration', { account: responses[0], book: responses[1] }), console.log(responses[1]); })
+    .catch(err => console.log(err));
 
 });
 
-router.get('/account/:id',checkAuthenticated, function(req, res, render) {
+router.get('/account/:id', checkAuthenticated, function (req, res, render) {
   const accountId = req.params.id;
   Account.findAll({
     where: {
       accountId: accountId
     }
   })
-  .then(account => {
-      res.send( account )
-  })
-  .catch(err => console.log(err));
+    .then(account => {
+      res.send(account)
+    })
+    .catch(err => console.log(err));
 });
 
-router.put('/account/:id', checkAuthenticated, function(req, res) {
+//Wade's Book/Item Scripts
+router.get('/item/:barcode', checkAuthenticated, function (req, res, render) {
+  const barcode = req.params.barcode;
+  console.log('Did something');
+  Item.findAll({
+    where: {
+      barcode: barcode
+    }
+  })
+    .then(item => {
+      res.send(item)
+    })
+    .catch(err => console.log(err));
+});
+
+router.put('/item/:barcode', checkAuthenticated, function (req, res) {
+  console.log(req.body);
+  const barcode = req.params.barcode;
+  const data = {
+    title: req.body.bookTitleInput,
+    format: req.body.bookFormat,
+    language: req.body.bookLanguage,
+    libraryId: req.body.bookLocation,
+    collectionId: req.body.bookCollection,
+  }
+  Item.update({
+    title: data.title,
+    format: data.format,
+    language: data.language,
+    libraryId: data.libraryId,
+    collectionId: data.collectionId,
+  }, {
+    where: {
+      barcode: barcode
+    }
+  })
+    .then(() => {
+      console.log('Update successful');
+      res.redirect('/administration');
+    })
+    .catch(err => console.log(err));
+
+});
+
+router.delete('/item/delete/:barcode', checkAuthenticated, (req, res) => {
+  const barcode = req.params.barcode;
+  Item.destroy({
+    where: {
+      barcode: barcode
+    }
+  })
+    .then(() => {
+      console.log('Delete Successful');
+      res.redirect('/administration');
+    })
+    .catch(err => console.log(err));
+});
+
+//End Wade's Scripts
+
+router.put('/account/:id', checkAuthenticated, function (req, res) {
   const accountId = req.params.id;
   const data = {
     firstName: req.body.firstNameUpdate,
@@ -82,16 +142,16 @@ router.put('/account/:id', checkAuthenticated, function(req, res) {
     address: data.address,
     isAdmin: data.isAdmin,
     password: data.password
-  },{
+  }, {
     where: {
       accountId: accountId
     }
   })
-  .then(() => {
-    console.log('Update successful');
-    res.redirect('/administration');
-  })
-  .catch(err => console.log(err));
+    .then(() => {
+      console.log('Update successful');
+      res.redirect('/administration');
+    })
+    .catch(err => console.log(err));
 
 });
 
@@ -102,33 +162,33 @@ router.delete('/account/delete/:id', checkAuthenticated, (req, res) => {
       accountId: accountId
     }
   })
-  .then(() => {
-    console.log('Delete Successful');
-    res.redirect('/administration');
-  })
-  .catch(err => console.log(err));
+    .then(() => {
+      console.log('Delete Successful');
+      res.redirect('/administration');
+    })
+    .catch(err => console.log(err));
 });
 
-router.get('/materials',checkAuthenticated, function(req, res, next) {
+router.get('/materials', checkAuthenticated, function (req, res, next) {
   Books.findAll()
-        .then(account => {
-            res.render('administration', { account })
-        })
-        .catch(err => console.log(err));
+    .then(account => {
+      res.render('administration', { account })
+    })
+    .catch(err => console.log(err));
 });
 
-router.post('/administration/delete', checkAuthenticated, urlencodedParser, function(req, res) {
+router.post('/administration/delete', checkAuthenticated, urlencodedParser, function (req, res) {
   if (!req.body) return res.sendStatus(400);
   console.log(req.body);
-  var sql = 'delete from Account where accountId = '+req.body.removeAccountSNumber+';';
-  databasemanager.query(sql, function(err, result) {
+  var sql = 'delete from Account where accountId = ' + req.body.removeAccountSNumber + ';';
+  databasemanager.query(sql, function (err, result) {
     if (err) throw err;
     console.log("Account deleted, ID: " + result.insertId);
   })
   res.redirect('/administration');
 });
 
-router.post('/administration', checkAuthenticated,  urlencodedParser, function(req, res) {
+router.post('/administration', checkAuthenticated, urlencodedParser, function (req, res) {
 
   const data = {
     firstName: req.body.firstNameInput,
@@ -139,40 +199,16 @@ router.post('/administration', checkAuthenticated,  urlencodedParser, function(r
     password: req.body.passwordInput
   }
 
-    Account.create({
-      firstName: data.firstName,
-      lastName: data.lastName,
-      email: data.email,
-      address: data.address,
-      isAdmin: data.isAdmin,
-      password: data.password
-    })
-      .then(account => res.redirect('/administration'))
-      .catch(err => console.log(err));
-  // if (!req.body) return res.sendStatus(400);
-  // console.log(req.body);
-  // let current_datetime = new Date();
-  // let dbDate = current_datetime.getFullYear() + "-" + (current_datetime.getMonth() + 1) + "-" + current_datetime.getDate();
-  // var sql = 'insert into Account (creationDate, state, password) values (\''+dbDate+'\',\'active\',\''+req.body.passwordInput+'\');';
-  // var tempId;
-  // dbQuery(sql, function(result) {
-  //   tempId = result;
-  //   if (req.body.selectAccount === 'patronAccount') {
-  //     let patronSql = 'insert into Patron (accountID, firstName, lastName, address, email) values ('+tempId+',\''+req.body.firstNameInput+'\',\''+req.body.lastNameInput+'\',\''+req.body.addressInput+'\',\''+req.body.emailInput+'\');';
-  //     databasemanager.query(patronSql, function(err, result) {
-  //       if (err) throw err;
-  //       console.log("Patron account made, ID:" + result.insertId);
-  //     })
-  //   } else if (req.body.selectAccount === 'staffAccount') {
-  //     let patronSql = 'insert into Staff (accountID, firstName, lastName, email, isAdmin) values ('+tempId+',\''+req.body.firstNameInput+'\',\''+req.body.lastNameInput+'\',\''+req.body.emailInput+'\','+req.body.isAdminRadio+');';
-  //     databasemanager.query(patronSql, function(err, result) {
-  //       if (err) throw err;
-  //       console.log("Patron account made, ID:" + result.insertId);
-  //     })
-  //   }  
-  // });
-  // console.log(req.body);
-  // res.redirect('/administration');
+  Account.create({
+    firstName: data.firstName,
+    lastName: data.lastName,
+    email: data.email,
+    address: data.address,
+    isAdmin: data.isAdmin,
+    password: data.password
+  })
+    .then(account => res.redirect('/administration'))
+    .catch(err => console.log(err));
 });
 
 router.get('/circulation',checkAuthenticated, async function(req, res, next) {
@@ -180,22 +216,22 @@ router.get('/circulation',checkAuthenticated, async function(req, res, next) {
     admin: false
   }
   const user = await req.user
-  if(user[0].dataValues.isAdmin == 1) {
+  if (user[0].dataValues.isAdmin == 1) {
     admin.admin = true
   }
   res.render('circulation', admin);
 });
 
-router.get('/reference',checkAuthenticated, async function(req, res, next) {
+router.get('/reference', checkAuthenticated, async function (req, res, next) {
   const admin = {
     admin: false
   }
   const user = await req.user
-  if(user[0].dataValues.isAdmin == 1) {
+  if (user[0].dataValues.isAdmin == 1) {
     admin.admin = true
   }
-  res.render('reference',admin);
-  
+  res.render('reference', admin);
+
 });
 router.post('/circulation/:itemId', checkAuthenticated, (req, res) => {
   const itemId = req.params.itemId;
@@ -240,7 +276,7 @@ router.get('/circulation/:accountId/:itemId', checkAuthenticated, (req, res) => 
   const itemId = req.params.itemId;
 
   const accounts = Account.findAll({
-    where : {
+    where: {
       accountId: accountId
     }
   });
@@ -249,7 +285,6 @@ router.get('/circulation/:accountId/:itemId', checkAuthenticated, (req, res) => 
       barcode: itemId
     }
   });
-
     
     Promise
       .all([accounts, item,])
@@ -263,12 +298,7 @@ router.get('/circulation/:accountId/:itemId', checkAuthenticated, (req, res) => 
             foundArray[i] = false;
           }
         }
-        if (responses[1][0].dataValues.checkedOut == true) {
-          foundArray[i] = true;
-        } else {
-          foundArray[i] = false;
-        }
-        console.log(foundArray[2])
+        console.log(responses[0]);
         res.send(foundArray);
       })
       .catch(err => console.log(err));
@@ -319,6 +349,7 @@ router.get('/reference',checkAuthenticated, function(req, res, next) {
 });
 
 router.get('/itportal',checkAuthenticated, function(req, res, next) {
+router.get('/itportal', checkAuthenticated, function (req, res, next) {
   res.render('itportal');
 });
 
