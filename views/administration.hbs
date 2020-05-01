@@ -249,8 +249,8 @@
             </div>
           <div class="modal-body">
             <div class="form-group">
-            <form id="book-update" method="POST" action="/book/"></form>
-              <!-- Book Title Form -->
+            <form id="book-update" method="POST" action="/book/">
+              <!-- Book Title Form 0.0 -->
               <label class="control-label" for="bookTitleInput">Book Title</label>
               <input id="bookTitleInput" name="bookTitleInput" type="text" placeholder="Title" class="form-control input-md" required="">
               <!-- Book Author Form -->
@@ -283,6 +283,7 @@
                 <option value="mainCollection">Main Collection</option>
                 <option value="specialCollection">Special Collection</option>
               </select>
+              </form>
             </div>
           </div>
           <div class="modal-footer">
@@ -363,7 +364,7 @@
             </div>
           <div class="modal-body">
             <div class="form-group">
-              <!-- Book Title Form -->
+              <!-- Book Title Form distinguish update/add inputs -->
               <label class="control-label" for="bookTitleInput">Book Title</label>
               <input id="bookTitleInput" name="bookTitleInput" type="text" placeholder="Title" class="form-control input-md" required="">
               <!-- Language Form -->
@@ -496,30 +497,29 @@
   <!--ACCOUNT SCRIPTS-->
   <script type="text/javascript">
   $(document).ready(() => {
-    $('.accountInfo').click((event) => {
-        $.ajax ({
-        url: 'account/'+event.target.dataset.account+'/',
-        type: 'GET',
-        dataType: 'json',
-        success: (data) => {
-          $('.modal-body #firstNameUpdate').val(data[0].firstName);
-          $('.modal-body #lastNameUpdate').val(data[0].lastName);
-          $('.modal-body #emailUpdate').val(data[0].email);
-          $('.modal-body #addressUpdate').val(data[0].address);
-          $('.modal-body #passwordUpdate').val(data[0].password);
-          if (data[0].isAdmin == 1) {
-            $('.modal-body #isAdminRadio-1').prop('checked', true);
+      $('.accountInfo').click((event) => {
+        $.ajax({
+          url: 'account/' + event.target.dataset.account + '/',
+          type: 'GET',
+          dataType: 'json',
+          success: (data) => {
+            $('.modal-body #firstNameUpdate').val(data[0].firstName);
+            $('.modal-body #lastNameUpdate').val(data[0].lastName);
+            $('.modal-body #emailUpdate').val(data[0].email);
+            $('.modal-body #addressUpdate').val(data[0].address);
+            $('.modal-body #passwordUpdate').val(data[0].password);
+            if (data[0].isAdmin == 1) {
+              $('.modal-body #isAdminRadio-1').prop('checked', true);
+            }
+            else {
+              $('.modal-body #isAdminRadio-0').prop('checked', true);
+            }
+            $('#account-update').attr('action', 'account/' + event.target.dataset.account + '/?_method=PUT');
+            $('#accountModal').modal('show');
+            console.log('ajax success', data);
+            console.log(data[0].firstName);
           }
-          else {
-            $('.modal-body #isAdminRadio-0').prop('checked', true);
-          }
-          $('#account-update').attr('action', 'account/'+event.target.dataset.account+'/?_method=PUT');
-          $('#accountModal').modal('show');
-          console.log('ajax success', data);
-          console.log(data[0].firstName);
-        }
-
-      });
+        });
       });
 
     $('.deleteAccount').click((event) => { 
@@ -550,38 +550,38 @@
 
 <!--BOOK SCRIPTS-->
 <script type="text/javascript">
-$(document).ready(() => {
+  $(document).ready(() => {
     $('.bookUpdate').click((event) => {
-        $.ajax ({
-        url: 'item/'+event.target.dataset.item+'/',
+      $.ajax({
+        url: 'item/' + event.target.dataset.item + '/',
         type: 'GET',
         dataType: 'json',
         success: (data) => {
           $('.modal-body #bookTitleInput').val(data[0].title);
           $('.modal-body #bookFormat').val(data[0].format);
-          $('#book-update').attr('action', 'item/'+event.target.dataset.item+'/?_method=PUT');
+          $('.modal-body #bookLanguage').val(data[0].language);
+          $('.modal-body #bookLocation').val(data[0].libraryId);
+          $('.modal-body #bookCollection').val(data[0].collectionId);
+          $('#book-update').attr('action', 'item/' + event.target.dataset.item + '/?_method=PUT');
           $('#bookUpdateModal').modal('show');
           console.log('ajax success', data);
-          console.log(data[0].title);
-        }
-
-      });
-      });
-
-    $('.deleteBook').click((event) => { 
-      $.ajax ({
-        url:'item/'+event.target.dataset.item+'/',
-        type: 'GET',
-        dataType: 'json',
-        success: (data) => {
-          $('.modal-body #bookTitleInput').val(data[0].title);
-          $('.modal-body #bookFormat').val(data[0].format);
-          $('#book-delete').attr('action', 'item/delete/'+event.target.dataset.item+'/?_method=DELETE');
-          $('#bookUpdateModal').modal('show');
         }
       });
     });
 
+    $('.deleteBook').click((event) => {
+      $.ajax({
+        url: 'item/' + event.target.dataset.item + '/',
+        type: 'GET',
+        dataType: 'json',
+        success: (data) => {
+          $('.modal-body #bookTitleInput').val(data[0].title);
+          $('.modal-body #bookFormat').val(data[0].format);
+          $('#book-delete').attr('action', 'item/delete/' + event.target.dataset.item + '/?_method=DELETE');
+          $('#bookUpdateModal').modal('show');
+        }
+      });
+    });
   });
 
 </script>
