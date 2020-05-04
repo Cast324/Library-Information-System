@@ -9,6 +9,7 @@ const passport = require('passport');
 const Account = require('../models/Account');
 const Item = require('../models/Item');
 const Book_Lending = require('../models/Book_Lending');
+const sequelize = require('sequelize')
 
 
 /* GET home page. */
@@ -223,14 +224,29 @@ router.get('/circulation',checkAuthenticated, async function(req, res, next) {
 });
 
 router.get('/reference', checkAuthenticated, async function (req, res, next) {
-  const admin = {
+
+  console.log(req.query)
+
+  var admin = {
     admin: false
   }
   const user = await req.user
   if (user[0].dataValues.isAdmin == 1) {
     admin.admin = true
   }
-  res.render('reference', admin);
+
+  Item.findAll({
+    where: {
+      title: sequelize.where(sequelize.fn('LOWER', sequelize.col('title')), 'LIKE', '%' + req.query.search + '%')
+    }
+  }).then((items) => {
+    admin = {
+      admin: admin,
+      items: items
+    }
+    res.render('reference', admin)
+}
+    )
 
 });
 router.post('/circulation/:itemId', checkAuthenticated, (req, res) => {
