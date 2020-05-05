@@ -60,26 +60,20 @@
       <div class="col-lg-12 text-center" style="padding: 30px">
           <h3>Reference</h3>
           <p>Search for items.</p>
-          <!-- Search form -->
-          <div class="input-group mb-3">
 
-              <select class="form-control">
-                  <option>Book</option>
-                  <option>DVD</option>
-                  <option>Periodical</option>
-              </select>
-              <!-- Search box -->
-              <div class="input-group col-sm-8">
-                  <input type="text" class="form-control" placeholder="" aria-label="" aria-describedby="basic-addon1">
-              </div>
 
-          </div>
+      <form id="checkin-form" method="Get" action="reference">
+        <div class="row input-group">
+        <div class="input-group-prepend">
+        <span class="input-group-text" id="">Book:</span>
       </div>
+      <input type="text" id="search" name="search" class="form-control" required="">
+    </div>
 
-      <div class="row" style="padding: 10px">
-          <div class="col"><button type="button" class="btn btn-primary btn-lg btn-block">Search</button></div>
-          <div class="col"><button type="button" class="btn btn-primary btn-lg btn-block">View Details</button></div>
-      </div>
+    <div class="row" style="padding: 10px">
+      <div class="col"><button type="submit" id="checkin-submit" value="submit" class="btn btn-primary btn-lg btn-block">Search</button></div>
+    </div>
+    </form>
 
       <div class="col-lg-12 text-center" style="padding: 10px">
           <h3>Materials</h3>
@@ -90,27 +84,26 @@
             <th scope="col">Title</th>
             <th scope="col">Format</th>
             <th scope="col">Location</th>
-            <th scope="col">Controls</th>
           </tr>
         </thead>
         <tbody>
-          {{#item}}
+          {{#items}}
           <tr>
             <th scope="row">{{barcode}}</th>
             <td>{{title}}</td>
             <td>{{format}}</td>
             <td>{{location}}</td>
-            <td><button type="button" class="btn btn-primary accountInfo" data-item="{{barcode}}">Edit</button>
-              <a href="#">delete</a>
-            </td>
+            
           </tr>
-          {{/item}}
+          {{/items}}
         </tbody>
       </table>
 
       </div>
 
   </div>
+
+ 
 
   <!-- Bootstrap core JavaScript -->
   <script src="vendor/jquery/jquery.slim.min.js"></script>
