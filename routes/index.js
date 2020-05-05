@@ -287,6 +287,7 @@ function checkIn(itemId) {
     console.log(err);
   });
 }
+
 router.get('/circulation/:accountId/:itemId', checkAuthenticated, (req, res) => {
   const accountId = req.params.accountId;
   const itemId = req.params.itemId;
