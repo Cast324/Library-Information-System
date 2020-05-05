@@ -29,7 +29,7 @@ Book_Lending = sequelize.define('Book_Lending', {
       allowNull: true
     },
     barcode: {
-      type: DataTypes.CHAR(15),
+      type: DataTypes.INTEGER(11),
       allowNull: false,
       references: {
         model: 'Item',

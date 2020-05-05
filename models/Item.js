@@ -3,9 +3,10 @@ const sequelize = require('../config/database');
 
 Item = sequelize.define('Item', {
     barcode: {
-      type: DataTypes.CHAR(15),
+      type: DataTypes.INTEGER(11),
       allowNull: false,
-      primaryKey: true
+      primaryKey: true,
+      autoIncrement: true
     },
     title: {
       type: DataTypes.STRING(100),

@@ -17,7 +17,8 @@ const Collection = sequelize.define('Collection', {
       allowNull: true
     }
   }, {
-    tableName: 'Collection'
+    tableName: 'Collection',
+    timestamps: false
   });
 
 

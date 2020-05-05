@@ -153,7 +153,7 @@
 
 <!-- COLLECTIONS -->
   <div class="row collapse" id="collapseCollections" style="padding: 10px">
-    <div class="col"><button type="button" class="btn btn-primary btn-lg btn-block" data-toggle="modal"
+    <div hidden="true" class="col"><button type="button" class="btn btn-primary btn-lg btn-block" data-toggle="modal"
         data-target="#createCollectionModal">Add New Collection</button></div>
 
     <!-- Table Area -->
@@ -165,16 +165,16 @@
             <th scope="col">Collection ID</th>
             <th scope="col">Name</th>
             <th scope="col">Description</th>
-            <th scope="col">Controls</th>
+            <th hidden="true" scope="col">Controls</th>
           </tr>
         </thead>
         <tbody>
           {{#collection}}
           <tr>
-            <th scope="row">{{collecitonId}}</th>
+            <th scope="row">{{collectionId}}</th>
             <td>{{collectionName}}</td>
             <td>{{description}}</td>
-            <td><button type="button" class="btn btn-primary collectionInfo" data-collection="{{collectionId}}">Edit</button>
+            <td hidden="true"><button type="button" class="btn btn-primary collectionInfo" data-collection="{{collectionId}}">Edit</button>
                 <button type="button" class="btn btn-primary deleteCollection" data-collection="{{collectionId}}">Delete</button>
             </td>
           </tr>
@@ -251,44 +251,42 @@
             <div class="form-group">
             <form id="book-update" method="POST" action="/book/">
               <!-- Book Title Form 0.0 -->
-              <label class="control-label" for="bookTitleInput">Book Title</label>
-              <input id="bookTitleInput" name="bookTitleInput" type="text" placeholder="Title" class="form-control input-md" required="">
+              <label class="control-label" for="bookTitleUpdateInput">Book Title</label>
+              <input id="bookTitleUpdateInput" name="bookTitleUpdateInput" type="text" placeholder="Title" class="form-control input-md" required="">
               <!-- Book Author Form -->
-              <label class="control-label" for="bookAuthorInput">Book Author</label>
-              <input id="bookAuthorInput" name="bookAuthorInput" type="text" placeholder="Author" class="form-control input-md" required="">
+              <label class="control-label" for="bookAuthorUpdateInput">Book Author</label>
+              <input id="bookAuthorUpdateInput" name="bookAuthorUpdateInput" type="text" placeholder="Author" class="form-control input-md" required="">
               <!-- Language Form -->
-              <form id="bookLanguage-form" method="POST" action="/administration">
               <label class="control-label" for="bookLanguage">Language</label>
-              <select id="bookLanguage" name="bookLanguage" class="form-control">
-                <option value="english">English</option>
-                <option value="spanish">Spanish</option>
+              <select id="bookLanguageUpdate" name="bookLanguageUpdate" class="form-control">
+                <option id="englishOption" value="english">English</option>
+                <option id="spanishOption" value="spanish">Spanish</option>
               </select>
               <!-- Format Form -->
-              <form id="bookFormat-form" method="POST" action="/administration">
-              <label class="control-label" for="bookFormat">Format</label>
-              <select id="bookFormat" name="bookFormat" class="form-control">
-                <option value="book">Book</option>
-                <option value="audioBook">Audio Book</option>
+              <label class="control-label" for="bookFormatUpdate">Format</label>
+              <select id="bookFormatUpdate" name="bookFormatUpdate" class="form-control" required>
+                <option id="bookOption" value="book">Book</option>
+                <option id="audioOption" value="audiobook">Audio Book</option>
               </select>
               <!-- Location Form -->
-              <form id="bookLocation-form" method="POST" action="/administration">
-              <label class="control-label" for="bookLocation">Location ID</label>
-              <select id="bookLocation" name="bookLocation" class="form-control">
-                <option value="123">123</option>
-              </select>
+              <label class="control-label" for="bookLocationUpdate">Location</label>
+              <input id="bookLocationUpdateInput" name="bookLocationUpdateInput" type="text" placeholder="Ex. 100.b2" class="form-control input-md" required="">
               <!-- Collection Form -->
-              <form id="bookColleciton-form" method="POST" action="/administration">
-              <label class="control-label" for="bookCollection">Collection</label>
-              <select id="bookCollection" name="bookCollection" class="form-control">
-                <option value="mainCollection">Main Collection</option>
-                <option value="specialCollection">Special Collection</option>
+              <label class="control-label" for="bookCollectionUpdate">Collection</label>
+              <select id="bookCollectionUpdate" name="bookCollectionUpdate" class="form-control">
+                <option id="mainOption" value="1">Main Collection</option>
+                <option id="specialOption" value="2">Special Collection</option>
               </select>
-              </form>
+              <!-- Library Form -->
+              <label class="control-label" for="libraryUpdate">Library</label>
+              <select id="libraryUpdate" name="libraryUpdate" class="form-control" required>
+                <option id="libraryUpdate" value="1">MSSU</option>
+              </select>
             </div>
           </div>
           <div class="modal-footer">
             <!-- Form Buttons -->
-            <button id="saveAccountButton" name="saveAccountButton" value="submit" class="btn btn-success">Save</button>
+            <button id="saveAccountButton" name="saveAccountButton" type="submit" value="submit" class="btn btn-success">Save</button>
             <button id="cancelChangesButton" name="cancelChangesButton" class="btn btn-danger" data-dismiss="modal">Cancel</button>
             </div>
             </form>
@@ -348,7 +346,7 @@
       </div>
 
 <!-- Book Add Modal -->
-      <div class="modal fade" id="createBookModal" tabindex="-1" role="dialog" aria-labelledby="createBookModal" aria-hidden="true">
+      <div class="modal fade" id="creaBookModal" tabindex="-1" role="dialog" aria-labelledby="createBookModal" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
           <div class="modal-content">
             <div class="modal-header">
@@ -400,6 +398,121 @@
           </div>
         </div>
       </div>
+
+<!-- Book Add Modal -->
+      <div class="modal fade" id="createBookModal" tabindex="-1" role="dialog" aria-labelledby="bookAddModal" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+            <h5 class="modal-title" id="modalLabel">Edit Book </h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+            </div>
+          <div class="modal-body">
+            <div class="form-group">
+            <form id="book-add" method="POST" action="/book/add">
+              <!-- Book Title Form 0.0 -->
+              <label class="control-label" for="bookTitleUpdateInput">Book Title</label>
+              <input id="bookTitleInput" name="bookTitleInput" type="text" placeholder="Title" class="form-control input-md" required="">
+              <!-- Book Author Form -->
+              <label class="control-label" for="bookAuthorInput">Book Author</label>
+              <input id="bookAuthorInput" name="bookAuthorInput" type="text" placeholder="Author" class="form-control input-md" required="">
+              <!-- Language Form -->
+              <label class="control-label" for="bookLanguage">Language</label>
+              <select id="bookLanguage" name="bookLanguage" class="form-control">
+                <option id="englishOption" value="english">English</option>
+                <option id="spanishOption" value="spanish">Spanish</option>
+              </select>
+              <!-- Format Form -->
+              <label class="control-label" for="bookFormat">Format</label>
+              <select id="bookFormat" name="bookFormat" class="form-control" required>
+                <option id="bookOption" value="book">Book</option>
+                <option id="audioOption" value="audiobook">Audio Book</option>
+              </select>
+              <!-- Location Form -->
+              <label class="control-label" for="bookLocationUpdate">Location</label>
+              <input id="bookLocationInput" name="bookLocationInput" type="text" placeholder="Ex. 100.b2" class="form-control input-md" required="">
+              <!-- Collection Form -->
+              <label class="control-label" for="bookCollection">Collection</label>
+              <select id="bookCollection" name="bookCollection" class="form-control">
+                <option id="mainOption" value="1">Main Collection</option>
+                <option id="specialOption" value="2">Special Collection</option>
+              </select>
+              <!-- Library Form -->
+              <label class="control-label" for="library">Library</label>
+              <select id="library" name="library" class="form-control" required>
+                <option id="library" value="1">MSSU</option>
+              </select>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <!-- Form Buttons -->
+            <button id="saveAccountButton" name="saveAccountButton" type="submit" value="submit" class="btn btn-success">Save</button>
+            <button id="cancelChangesButton" name="cancelChangesButton" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+            </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      
+<!-- Book Delete Modal -->
+      <div class="modal fade" id="bookDeleteModal" tabindex="-1" role="dialog" aria-labelledby="bookDeleteModal" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+            <h5 class="modal-title" id="modalLabel">Edit Book </h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+            </div>
+          <div class="modal-body">
+            <div class="form-group">
+            <form id="book-delete" method="POST" action="/book/delete/">
+              <!-- Book Title Form 0.0 -->
+              <label class="control-label" for="bookTitleUpdateInput">Book Title</label>
+              <input id="bookTitleDeleteInput" name="bookTitleDeleteInput" type="text" placeholder="Title" class="form-control input-md" disabled="true" required="">
+              <!-- Book Author Form -->
+              <label class="control-label" for="bookAuthorDeleteInput">Book Author</label>
+              <input id="bookAuthorDeleteInput" name="bookAuthorDeleteInput" type="text" placeholder="Author" class="form-control input-md" disabled="true" required="">
+              <!-- Language Form -->
+              <label class="control-label" for="bookLanguageDelete">Language</label>
+              <select id="bookLanguageDelete" name="bookLanguageDelete" disabled="true" class="form-control">
+                <option id="englishDeleteOption" value="english">English</option>
+                <option id="spanishDeleteOption" value="spanish">Spanish</option>
+              </select>
+              <!-- Format Form -->
+              <label class="control-label" for="bookFormatUpdate">Format</label>
+              <select id="bookFormatDelete" name="bookFormatDelete" class="form-control" disabled="true" required>
+                <option id="bookDeleteOption" value="book">Book</option>
+                <option id="audioDeleteOption" value="audiobook">Audio Book</option>
+              </select>
+              <!-- Location Form -->
+              <label class="control-label" for="bookLocationDelete">Location</label>
+              <input id="bookLocationDeleteInput" name="bookLocationDeleteInput" type="text" placeholder="Ex. 100.b2" disabled="true" class="form-control input-md" required="">
+              <!-- Collection Form -->
+              <label class="control-label" for="bookCollectionUpdate">Collection</label>
+              <select id="bookCollectionDelete" name="bookCollectionDelete" class="form-control" disabled="true">
+                <option id="mainDeleteOption" value="1">Main Collection</option>
+                <option id="specialDeleteOption" value="2">Special Collection</option>
+              </select>
+              <!-- Library Form -->
+              <label class="control-label" for="libraryDelete">Library</label>
+              <select id="libraryDelete" name="libraryDelete" class="form-control"  disabled="true" required>
+                <option id="libraryDelete" value="1">MSSU</option>
+              </select>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <!-- Form Buttons -->
+            <button id="saveAccountButton" name="saveAccountButton" type="submit" value="submit" class="btn btn-success">Delete</button>
+            <button id="cancelChangesButton" name="cancelChangesButton" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+            </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
 
 <!-- Collection Add Modal -->
       <div class="modal fade" id="createCollectionModal" tabindex="-1" role="dialog" aria-labelledby="createCollectionModal" aria-hidden="true">
@@ -552,11 +665,24 @@
         type: 'GET',
         dataType: 'json',
         success: (data) => {
-          $('.modal-body #bookTitleInput').val(data[0].title);
-          $('.modal-body #bookFormat').val(data[0].format);
-          $('.modal-body #bookLanguage').val(data[0].language);
-          $('.modal-body #bookLocation').val(data[0].libraryId);
-          $('.modal-body #bookCollection').val(data[0].collectionId);
+          $('.modal-body #bookTitleUpdateInput').val(data[0].title);
+          $('.modal-body #bookAuthorUpdateInput').val(data[0].author);
+          if (data[0].language == "english") {
+            $('.modal-body #englishOption').prop('selected', true);
+          } else if (data[0].language == "spanish") {
+            $('.modal-body #spanishOption').prop('selected', true)
+          }
+          if (data[0].format == "book") {
+            $('.modal-body #bookOption').prop('selected', true);
+          } else if (data[0].format == "audiobook") {
+            $('.modal-body #audioOption').prop('selected', true)
+          }
+          if (data[0].collectionId == 1) {
+            $('.modal-body #mainOption').prop('selected', true);
+          } else if (data[0].collectionId == 2) {
+            $('.modal-body #specialOption').prop('selected', true)
+          }
+          $('.modal-body #bookLocationUpdateInput').val(data[0].location);
           $('#book-update').attr('action', 'item/' + event.target.dataset.item + '/?_method=PUT');
           $('#bookUpdateModal').modal('show');
           console.log('ajax success', data);
@@ -570,10 +696,26 @@
         type: 'GET',
         dataType: 'json',
         success: (data) => {
-          $('.modal-body #bookTitleInput').val(data[0].title);
-          $('.modal-body #bookFormat').val(data[0].format);
+          $('.modal-body #bookTitleDeleteInput').val(data[0].title);
+          $('.modal-body #bookAuthorDeleteInput').val(data[0].author);
+          if (data[0].language == "english") {
+            $('.modal-body #englishDeleteOption').prop('selected', true);
+          } else if (data[0].language == "spanish") {
+            $('.modal-body #spanishDeleteOption').prop('selected', true)
+          }
+          if (data[0].format == "book") {
+            $('.modal-body #bookDeleteOption').prop('selected', true);
+          } else if (data[0].format == "audiobook") {
+            $('.modal-body #audioDeleteOption').prop('selected', true)
+          }
+          if (data[0].collectionId == 1) {
+            $('.modal-body #mainDeleteOption').prop('selected', true);
+          } else if (data[0].collectionId == 2) {
+            $('.modal-body #specialDeleteOption').prop('selected', true)
+          }
+          $('.modal-body #bookLocationDeleteInput').val(data[0].location);
           $('#book-delete').attr('action', 'item/delete/' + event.target.dataset.item + '/?_method=DELETE');
-          $('#bookUpdateModal').modal('show');
+          $('#bookDeleteModal').modal('show');
         }
       });
     });

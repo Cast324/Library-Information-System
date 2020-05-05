@@ -9,6 +9,7 @@ const passport = require('passport');
 const Account = require('../models/Account');
 const Item = require('../models/Item');
 const Book_Lending = require('../models/Book_Lending');
+const Collection = require('../models/Collection');
 const sequelize = require('sequelize')
 
 
@@ -45,10 +46,11 @@ router.get('/landing', checkAuthenticated, async function (req, res, next) {
 router.get('/administration', checkAuthenticated, function (req, res, next) {
   const accounts = Account.findAll();
   const item = Item.findAll();
+  const collection = Collection.findAll();
 
   Promise
-    .all([accounts, item,])
-    .then(responses => { res.render('administration', { account: responses[0], book: responses[1] }), console.log(responses[1]); })
+    .all([accounts, item, collection])
+    .then(responses => { res.render('administration', { account: responses[0], book: responses[1], collection: responses[2] }); })
     .catch(err => console.log(err));
 
 });
@@ -69,32 +71,61 @@ router.get('/account/:id', checkAuthenticated, function (req, res, render) {
 //Wade's Book/Item Scripts
 router.get('/item/:barcode', checkAuthenticated, function (req, res, render) {
   const barcode = req.params.barcode;
-  console.log('Did something');
   Item.findAll({
     where: {
       barcode: barcode
     }
   })
     .then(item => {
-      res.send(item)
+      res.send(item);
     })
     .catch(err => console.log(err));
 });
 
+router.post('/book/add', checkAuthenticated, (req, res) => {
+  console.log(req.body);
+  const data = {
+    title: req.body.bookTitleInput,
+    author: req.body.bookAuthorInput,
+    format: req.body.bookFormat,
+    language: req.body.bookLanguage,
+    location: req.body.bookLocationInput,
+    collectionId: req.body.bookCollection,
+    libraryId: req.body.library
+  }
+  Item.create({
+    title: data.title,
+    format: data.format,
+    language: data.language,
+    author: data.author,
+    location: data.location,
+    libraryId: data.libraryId,
+    collectionId: data.collectionId,
+  })
+    .then(() => {
+      console.log('Update successful');
+      res.redirect('/administration');
+    })
+    .catch(err => console.log(err));
+});
 router.put('/item/:barcode', checkAuthenticated, function (req, res) {
   console.log(req.body);
   const barcode = req.params.barcode;
   const data = {
-    title: req.body.bookTitleInput,
-    format: req.body.bookFormat,
-    language: req.body.bookLanguage,
-    libraryId: req.body.bookLocation,
-    collectionId: req.body.bookCollection,
+    title: req.body.bookTitleUpdateInput,
+    author: req.body.bookAuthorUpdateInput,
+    format: req.body.bookFormatUpdate,
+    language: req.body.bookLanguageUpdate,
+    location: req.body.bookLocationUpdateInput,
+    collectionId: req.body.bookCollectionUpdate,
+    libraryId: req.body.libraryUpdate
   }
   Item.update({
     title: data.title,
     format: data.format,
     language: data.language,
+    author: data.author,
+    location: data.location,
     libraryId: data.libraryId,
     collectionId: data.collectionId,
   }, {
@@ -107,7 +138,6 @@ router.put('/item/:barcode', checkAuthenticated, function (req, res) {
       res.redirect('/administration');
     })
     .catch(err => console.log(err));
-
 });
 
 router.delete('/item/delete/:barcode', checkAuthenticated, (req, res) => {
@@ -178,16 +208,6 @@ router.get('/materials', checkAuthenticated, function (req, res, next) {
     .catch(err => console.log(err));
 });
 
-router.post('/administration/delete', checkAuthenticated, urlencodedParser, function (req, res) {
-  if (!req.body) return res.sendStatus(400);
-  console.log(req.body);
-  var sql = 'delete from Account where accountId = ' + req.body.removeAccountSNumber + ';';
-  databasemanager.query(sql, function (err, result) {
-    if (err) throw err;
-    console.log("Account deleted, ID: " + result.insertId);
-  })
-  res.redirect('/administration');
-});
 
 router.post('/administration', checkAuthenticated, urlencodedParser, function (req, res) {
 
